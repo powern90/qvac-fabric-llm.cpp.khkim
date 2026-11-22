@@ -670,6 +670,10 @@ extern "C" {
         GGML_OP_GATED_DELTA_NET_DEFERRED,
         GGML_OP_GDN_CONV_DEFERRED,
 
+        // Native sparse attention (NSA): block selection and selected-block attention
+        GGML_OP_NSA_SELECT,
+        GGML_OP_NSA_SEL_ATTN,
+
         GGML_OP_COUNT,
     };
 
@@ -3175,6 +3179,56 @@ extern "C" {
             int64_t               n_norm,
             int64_t               head_dim,
             float                 eps);
+
+    // NSA block selection (Native Sparse Attention, arXiv:2502.11089, fla naive_nsa_topk rule)
+    // the key of token j lives at row j (single sequence, cell index == position)
+    //   q     : F32 [D, Hq, T]   post-RoPE queries, Hq % Hkv == 0, q head h uses kv head h / (Hq/Hkv)
+    //   k_cmp : F32 [D, Hkv, NB] mean of the keys of each block of block_size tokens
+    //   pos   : I32 [T]          position of each query
+    // block b is complete for query t if (b+1)*block_size - 1 <= pos[t]. the score of a complete block is
+    // softmax(scale * q.k_cmp) over the complete blocks, averaged over the q heads of the kv group.
+    // blocks 0, cur and cur-1 (cur = pos[t]/block_size) are forced (score 1). the n_sel candidates
+    // (complete or forced) with the highest score are returned, ties to the lower index, padded with -1.
+    // result: I32 [n_sel, Hkv, T]
+    GGML_API struct ggml_tensor * ggml_nsa_select(
+            struct ggml_context * ctx,
+            struct ggml_tensor  * q,
+            struct ggml_tensor  * k_cmp,
+            struct ggml_tensor  * pos,
+            int                   block_size,
+            int                   n_sel,
+            float                 scale);
+
+    // NSA selected-block attention: causal softmax attention over the tokens of the selected blocks
+    //   q   : F32     [D,  Hq,  T]
+    //   k   : F16/F32 [D,  Hkv, N] any strides (e.g. a KV cache view), row j = token at position j
+    //   v   : F16/F32 [Dv, Hkv, N] any strides (a transposed V cache can be passed via ggml_permute)
+    //   idx : I32     [S,  Hkv, T] block indices from ggml_nsa_select, -1 = unused
+    //   pos : I32     [T]
+    // query t attends to the tokens j < N of its blocks with j <= pos[t]. a query with no token gets 0.
+    // result: F32 [Dv, Hq, T]
+    GGML_API struct ggml_tensor * ggml_nsa_sel_attn(
+            struct ggml_context * ctx,
+            struct ggml_tensor  * q,
+            struct ggml_tensor  * k,
+            struct ggml_tensor  * v,
+            struct ggml_tensor  * idx,
+            struct ggml_tensor  * pos,
+            int                   block_size,
+            float                 scale);
+
+    // same, but query t only attends to tokens j > pos[t] - window (window > 0), which turns the op into
+    // sliding-window attention when idx holds the blocks that overlap the window
+    GGML_API struct ggml_tensor * ggml_nsa_sel_attn_ext(
+            struct ggml_context * ctx,
+            struct ggml_tensor  * q,
+            struct ggml_tensor  * k,
+            struct ggml_tensor  * v,
+            struct ggml_tensor  * idx,
+            struct ggml_tensor  * pos,
+            int                   block_size,
+            float                 scale,
+            int                   window);
 
     // DSA lightning indexer
     //

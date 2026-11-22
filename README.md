@@ -1,271 +1,314 @@
-<div align="center">
+# Track A: Gated DeltaNet + NSA 0.4B in qvac-fabric-llm.cpp
 
-<h1>qvac-fabric-llm.cpp</h1>
+This submission adds native ggml/GGUF inference for
+[Idiap/gated-deltanet-nsa-0.4B-10B](https://huggingface.co/Idiap/gated-deltanet-nsa-0.4B-10B) on **CPU and CUDA**.
+Native Sparse Attention (NSA) is built on **two new first-class ggml ops**, and the same graph serves prompt processing
+and token-by-token generation. No Python runs at inference time; only the converter is Python.
 
-<p><strong>AI inference and training engine for desktop and mobile platforms.</strong></p>
+## Requirements at a glance
 
-<p>
-<a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="License: MIT"></a>
-<a href="https://github.com/ggml-org/llama.cpp"><img src="https://img.shields.io/badge/based%20on-llama.cpp%20b10796-orange.svg" alt="Based on llama.cpp"></a>
-</p>
+| # | Requirement | Status | Evidence |
+|---|---|---|---|
+| A | NSA as new first-class ggml ops; prompt processing and token-by-token generation | Done | Two new ops with CPU and CUDA kernels ([§1](#1-what-was-built)); token-by-token decode matches the reference as closely as prefill (L4, [§4](#4-correctness)) |
+| 1 | Convert and load through GGUF | Done | `conversion/gdn_nsa.py` ([§2](#2-build-convert-run)); an independent check rebuilds all 290 GGUF tensors from the HF checkpoint, bitwise equal (L0) |
+| 2 | Real output on CPU | Done | Same greedy text as on GPU. Perplexity 14.6316 vs reference 14.6317 ([§3](#3-output-on-cpu-and-gpu)) |
+| 3 | Real output on GPU (CUDA), no silent CPU fallback | Done | Every NSA, GDN and matmul node runs on CUDA0; only the token-embedding lookup stays on the CPU. Exception: contexts beyond about 200K tokens ([§3](#3-output-on-cpu-and-gpu)) |
+| 4 | Correctness vs the reference, methodology, tolerances | Done | Six levels (L0–L5) against two references, thresholds fixed before the runs ([§4](#4-correctness)) |
+| 5 | Automated tests, reproducible evidence | Done | `test-backend-ops` 8/8 + 101/101 cases; validation report with 37 automated checks, all PASS ([§5](#5-tests-and-evidence)); every step as copy-paste commands ([§9](#9-run-everything-copy-paste)) |
+| 6 | CPU/GPU performance, memory, limitations | Done | CPU and CUDA throughput and memory ([§6](#6-performance-and-memory)), limitations ([§7](#7-known-limitations)) |
+| Bonus | Quantization | Done | Q8_0/Q4_0 KV cache read directly by the NSA kernels and checked against the fp32 reference; standard weight presets need no new kernels ([§8](#8-bonus-quantization)) |
 
-</div>
+## 1. What was built
 
-`qvac-fabric-llm.cpp` is a specialized fork of [llama.cpp](https://github.com/ggml-org/llama.cpp) optimized for embedded systems, mobile devices, and enterprise deployment scenarios. It extends the excellent foundation of llama.cpp with additional capabilities focused on memory-based model loading, mobile GPU optimization, and flexible integration patterns.
+**Model.** 24 layers: even layers are Gated DeltaNet (GDN, a linear-attention recurrence), odd layers are NSA. Hidden
+size 1024, 358M parameters. Each NSA layer adds up three attention branches, each scaled by a learned gate:
 
----
+| NSA branch | What it attends to | How it is computed |
+|---|---|---|
+| compressed | the mean K/V of every complete 64-token block | existing ggml ops (block mean + small dense attention) |
+| selected | the tokens of the 16 highest-scoring blocks | **new op** `ggml_nsa_select` picks the blocks, **new op** `ggml_nsa_sel_attn` attends to them |
+| sliding window | the last 512 tokens | `ggml_nsa_sel_attn_ext` (the same op with a lower position bound) over the 9 blocks that overlap the window |
 
-## Key Features
+**New ggml ops** (`GGML_OP_NSA_SELECT`, `GGML_OP_NSA_SEL_ATTN`):
 
-The following capabilities are developed and maintained as part of qvac-fabric-llm.cpp.
+- **Kernels:** CPU in `ggml/src/ggml-cpu/ops.cpp`, CUDA in `ggml/src/ggml-cuda/nsa.cu`. On CUDA, one thread block per (token, KV head) loads each selected K/V block into shared memory once for all 16 query heads that share it. Decode splits the selected blocks across thread blocks (split-K) to keep the GPU busy with a single token.
+- The attention op reads the KV cache directly on both backends: F16/F32, or Q8_0/Q4_0.
+- Block selection uses the same float operations on both backends, so CPU and CUDA pick bit-identical blocks for the same input.
 
-### Cluster Inference
+**Prompt processing and generation** use the same graph (generation is one token per step). Each token's K/V goes to
+the cache cell equal to its position, which the block math relies on.
 
-Run inference across GPUs on multiple machines using RPC. TCP is supported by default; **RDMA is Linux-only**, with compatible RoCEv2 adapters and `libibverbs`, and is negotiated automatically.
+**What goes where**
 
-Build with `-DGGML_RPC=ON` and the GPU backend for each host. For RDMA, also set `-DGGML_RPC_RDMA=ON` on the Linux client and servers, with `libibverbs` installed (see the [RPC Guide](tools/rpc/README.md)). Start one server per GPU on a private network:
+| Area | Files |
+|---|---|
+| new ops | `ggml/include/ggml.h`, `ggml/src/ggml.c`, `ggml/src/ggml-cpu/{ops.cpp,ops.h,ggml-cpu.c}`, `ggml/src/ggml-cuda/{nsa.cu,nsa.cuh,ggml-cuda.cu}`, `ggml/src/ggml-nsa-exp.h`, `ggml/include/ggml-rpc.h` |
+| model | `src/models/gdn-nsa.cpp` (new), `src/models/models.h`, `src/llama-{arch,model,context,kv-cache}.cpp`, `src/llama-arch.h`, `src/llama-hparams.h` |
+| converter | `conversion/gdn_nsa.py` (new), `conversion/__init__.py`, `gguf-py/gguf/{constants,gguf_writer}.py` |
+| op tests | `tests/test-backend-ops.cpp` (`test_nsa_select`, `test_nsa_sel_attn`) |
+| validation suite | `tests/gdn-nsa-test/` ([README](tests/gdn-nsa-test/README.md), [REPORT](tests/gdn-nsa-test/REPORT.md)), un-ignored in `tests/.gitignore` |
 
-```bash
-# Run on GPU host 1 and GPU host 2, respectively
-./build/bin/ggml-rpc-server -H 192.168.88.10 -p 50052 --device CUDA0
-./build/bin/ggml-rpc-server -H 192.168.88.11 -p 50052 --device CUDA0
-```
-
-#### Pipeline Parallelism
-
-Split layers across GPUs and overlap prompt microbatches. Use one endpoint per stage and a batch larger than the microbatch. On the main host:
-
-```bash
-./build/bin/llama-cli -m model.gguf --rpc 192.168.88.10:50052,192.168.88.11:50052 \
-    --device RPC0,RPC1 --split-mode layer -ngl all -b 2048 -ub 256
-```
-
-#### Tensor Parallelism
-
-Split work within each layer across GPUs to accelerate decoding for supported models. Fast network links help because the GPUs exchange results frequently. Using the same servers:
-
-```bash
-./build/bin/llama-cli -m model.gguf --rpc 192.168.88.10:50052,192.168.88.11:50052 \
-    --device RPC0,RPC1 --split-mode tensor -ngl all
-```
-
-#### Direct All-Reduce and RDMA Transport
-
-Tensor split across a power-of-two number of RPC devices (2, 4, 8, 16) uses a direct recursive-doubling (butterfly) all-reduce between the servers, so partial results no longer pass through the main host. Asynchronous RPC transfers and events (protocol 113) let layer split overlap microbatches across stages. Shared builds load `libibverbs` at runtime, so hosts without RDMA fall back to TCP automatically. All servers and the client must run the same protocol version; the direct communicator is for trusted private networks only. See the [RPC Guide](tools/rpc/README.md).
-
-### LoRA Fine-Tuning
-
-`qvac-fabric-llm.cpp` provides native [LoRA](https://arxiv.org/abs/2106.09685) (Low-Rank Adaptation) fine-tuning across CPU, Vulkan, and Metal backends. The training pipeline runs directly on consumer hardware, including mobile phones and integrated GPUs.
-
-- Multi-backend GPU training on CPU, Vulkan (NVIDIA, AMD, Intel, Mali, Adreno), Metal (Apple) and CUDA
-- Backward kernels for GELU/GEGLU/SIGLU, L2-norm, MoE `mul_mat_id`, flash attention, SSM-conv and gated-delta-net, plus quantized `out_prod` on Vulkan
-- On-device fine-tuning from iOS via the `llama.swiftui` example (`FinetuneBridge`)
-- FP32, FP16, Q8, and Q4 training paths
-- Supervised instruction-tuning via assistant-only masked loss (SFT)
-- Checkpoint saving, optimizer-state save/load, resumable training and stop requests (`llama_opt_*` / `llama_lora_*` C API)
-- Learning rate schedulers (constant, cosine, linear) with warmup support
-- LoRA adapter merging into base models via **llama-export-lora**
-- Verified compatibility with Qwen3, Qwen3.5 and Qwen3.6 (dense and MoE), Gemma3, and Gemma4 (dense and MoE) model architectures
-
-For usage details and CLI reference, see the [Finetuning Guide](examples/training/README.md).
-
-### TurboVec / Local Vector Search
-
-`ggml-vector-index` provides a standalone C API for local vector search, including compressed CPU indexes for applications that need on-device retrieval.
-
-- **Storage**: full-precision f32, generic q8 and packed q4, plus TurboVec 2-, 3- and 4-bit modes (a byte-exact port of [turbovec](https://github.com/ryancodrai/turbovec) 1.1.2, dimensions up to 16384) with scalar, NEON, and AVX2 scoring paths.
-- **Search**: exact top-k scans, filtering by caller-provided IDs, reusable prepared filters, and optional IVF search for approximate candidate selection.
-- **Persistence**: index snapshots, with read-only mmap loading and incremental mutation logs for the generic storage modes. TurboVec writes turbovec's own v8 files, in memory or on disk, and saves incrementally with crash-safe `sync`.
-
-The library is disabled by default. Enable it with `-DGGML_VECTOR_INDEX=ON` and link `ggml::vector-index` explicitly; it is not integrated into the llama runtime or server. See the [Vector Index Guide](docs/vector-index.md) for supported dimensions, API usage, persistence contracts, and benchmarks.
-
-### Apple Neural Engine via Core ML *(exclusive)*
-
-Opt-in Core ML sidecars run part of the workload on the Apple Neural Engine (ANE) while Metal runs the rest, freeing GPU time on Apple silicon. Build with `-DLLAMA_COREML=ON` (macOS 15 / iOS 18 or later, Metal backend). If a model, build or context is unsupported, the sidecar logs a warning and the model runs on Metal as usual.
-
-- **Qwen3.8-27B prefill** (`--coreml-ffn`): part of each prefill FFN runs on the Neural Engines, and decode stays on Metal. On an M3 Ultra with `Qwen3.8-27B-Q4_0`, prefill of a 4372-token prompt rose from 341.7 to 470.5 tok/s, with KL divergence from Metal's logits of 1e-5 to 7e-5.
-  - Only prompt batches of 256 or more tokens use the Neural Engine.
-  - The split between Metal and Core ML adapts to the chip (two Neural Engines on Ultra parts, one elsewhere) and can be overridden with `--coreml-ffn-split`.
-  - The Core ML programs (4.5-9 GB) compile on first start in about 1-2 minutes into `--coreml-ffn-cache`; later starts load them in about 3 s.
-  - It currently supports the Qwen3.8-27B shape (64 layers, 5120 hidden, 17408 FFN).
-- **EmbeddingGemma 2 embeddings** (`--coreml-model DIR`): ANE acceleration for the embedding API, CLI and server. Short texts are packed into fixed 256-token windows, predictions can be pipelined asynchronously (`--coreml-max-inflight 1..8`), and output order and normalization match the regular path. An exporter, a compute-plan tool and a benchmark are in [examples/embedding-coreml](examples/embedding-coreml/README.md).
-- **Library integration**: `llama_supports_coreml()`, `llama_set_coreml_model()` and `llama_set_coreml_ffn()` configure the sidecars from native apps and addons. Each context owns its Core ML models and worker, and a failed configuration leaves the previous one unchanged. Applications only provide a writable cache directory; no Python exporter is needed at run time. `-DLLAMA_COREML_FFN=ON/OFF` selects only the FFN or only the embedding sidecar.
+## 2. Build, convert, run
 
 ```bash
-cmake -B build -DLLAMA_COREML=ON
-cmake --build build --target llama-server
-build/bin/llama-server -m Qwen3.8-27B-Q4_0.gguf --coreml-ffn
+cmake -S . -B build-cuda -G Ninja -DCMAKE_BUILD_TYPE=Release -DLLAMA_BUILD_TESTS=ON -DGGML_CUDA=ON -DCMAKE_CUDA_ARCHITECTURES=100  # 100 = B200
+cmake --build build-cuda -j --target llama llama-completion llama-bench test-backend-ops
+
+hf download Idiap/gated-deltanet-nsa-0.4B-10B --local-dir ckpt
+python convert_hf_to_gguf.py ckpt --outtype f32 --outfile gdn-nsa-0.4B-f32.gguf
+
+P="The capital of France is Paris. The capital of Germany is"
+build-cuda/bin/llama-completion -m gdn-nsa-0.4B-f32.gguf -p "$P" -n 24 --temp 0 -no-cnv -dev none   # CPU only
+build-cuda/bin/llama-completion -m gdn-nsa-0.4B-f32.gguf -p "$P" -n 24 --temp 0 -no-cnv -ngl 99     # CUDA
 ```
 
-See [docs/coreml-ffn.md](docs/coreml-ffn.md) for the full guide.
+The complete list of commands, including every validation step, is in [§9](#9-run-everything-copy-paste).
 
-### AMD XDNA (NPU) Backend *(exclusive)*
+## 3. Output on CPU and GPU
 
-A ggml backend that runs part of a graph on the AMD XDNA2 NPU (Ryzen AI: Strix Point, Strix Halo, Krackan) through XRT. It is built around Qwen3.5-style models with gated-delta-net layers, where single-token decode runs almost entirely on the NPU array. See [ggml/src/ggml-xdna/README.md](ggml/src/ggml-xdna/README.md) for build, environment variables and troubleshooting.
+Greedy output of the CPU build and of the CUDA build (`-ngl 99`; step 3 of [§9](#9-run-everything-copy-paste)), identical on both:
 
-- **Matrix multiplication**: BF16, F16, Q4_K, Q5_K and Q6_K weights with F32 activations. Decode GEMV keeps weights quantized in memory and applies group parameters on the accumulator. Small batches use a decode GEMM and larger prefill batches use a prefill GEMM, with an int8 path for K-quants.
-- **Fused decode layer**: one design holds the whole recurrent layer of a decode token (conv, norm, gated delta net, gated epilogue, projections and the FFN transition), with the recurrent state kept on the device between tokens.
-- **Prefill ops**: gated-delta-net and flash-attention kernels run on the array above size thresholds. Below them the host is faster and cheaper per token, so the backend leaves them there.
-- **Wider models**: models wider than the fused layer (Qwen3.5 2B, 4B, 9B) run decode on the host cores and use the NPU for prefill. On a Ryzen AI MAX+ 395, Qwen3.5-2B Q4_K_M decode rose from 20.1 to 61.9 t/s at 0.94 instead of 1.69 J per token versus the NPU's per-op decode.
-- **Packaging**: it can be built as a loadable module (`GGML_BACKEND_DL`), with the kernel artifacts installed next to the library.
+> The capital of France is Paris. The capital of Germany is **Berlin. The capital of Italy is Rome. The capital of Japan is Tokyo. The capital of the United States is Washington**
 
-Requires Linux with an NPU2 device (`/dev/accel/accel0`), XRT 2.25.x under `/opt/xilinx/xrt`, `uuid-dev`, and a Python environment with mlir-aie (IRON) 1.4.3 to compile the kernels at build time. Enable with `-DGGML_XDNA=ON`. All llama contexts in a process share one backend context and take turns on the array.
+**Against the reference** (4000-token prompt; the authors' production model, see [§4](#4-correctness)):
 
-### BitNet Inference and Fine-Tuning
+| | Reference | CPU | CUDA |
+|---|---|---|---|
+| Perplexity | 14.6317 | 14.6316 | 14.6317 |
+| Same top-1 token as the reference | — | 99.975% | 99.950% |
 
-Native support for [BitNet](https://arxiv.org/abs/2402.17764) ternary quantized models via the TQ2_0 data type, enabling efficient inference and LoRA fine-tuning of models such as [bitnet_b1_58-xl](https://huggingface.co/gianni-cor/bitnet_b1_58-xl-TQ2_0) on resource-constrained devices.
+**No silent CPU fallback.** `GGML_SCHED_DEBUG=2` prints the backend of every graph node. In the prefill and decode
+graphs of a 600-token run, all `NSA_SELECT` / `NSA_SEL_ATTN` nodes, the GDN op and every matmul run on CUDA0; the only
+CPU nodes are the two token-embedding lookups (`GET_ROWS`), which llama.cpp keeps on the host by design. The NSA ops
+never read weights and their CUDA kernels accept Q8_0/Q4_0 caches, so quantized weights or KV caches do not move them
+to the CPU; KV cache types without a CUDA kernel are rejected when the context is created. One limit: beyond about 200K
+tokens of context on the B200 the selection op no longer fits in shared memory and silently runs on the CPU
+([§7](#7-known-limitations)).
 
-The official [microsoft/BitNet](https://github.com/microsoft/BitNet) inference framework provides optimized CPU kernels and GPU support limited to CUDA. `qvac-fabric-llm.cpp` **extends** BitNet to all major GPU backends -- Vulkan, Metal, and CPU -- bringing cross-platform GPU-accelerated BitNet inference and on-device fine-tuning to hardware not covered by the upstream framework, including Apple Silicon, mobile GPUs (Adreno, Mali), and AMD/Intel discrete GPUs. Compatible with models such as [bitnet_b1_58-3B](https://huggingface.co/1bitLLM/bitnet_b1_58-3B).
+## 4. Correctness
 
-- **Backends**: Vulkan, Metal and CPU TQ2_0 quantization support
-- **Training**: LoRA fine-tuning of BitNet models on Vulkan, Metal, and CPU backends
-- **Conversion**: HuggingFace-to-GGUF conversion for BitNet model architectures
-- Cooperative matrix (coopmat) support for Vulkan devices that expose the extension
+**Two references**, both from the authors' code (`idiap/hybrid-linear-sparse-attention` @ b786cbc, the fork of fla
+that has this model type; versions pinned):
 
-### TurboQuant KV Cache Quantization
+- **kernel reference:** the production path (fp32 weights, but fp16 q/k/v inside the layers and Triton kernels).
+- **fp32 reference:** the same model in pure PyTorch float32.
 
-TurboQuant adds low-bit KV-cache quantization formats for long-context inference while preserving token-generation quality close to higher-bit caches. It supports:
+The port is compared with both, because the kernel path itself is not exact.
 
-- **TBQ3_0 / TBQ4_0**: TurboQuant 3-bit and 4-bit formats with QJL Stage 2 correction.
-- **PQ3_0 / PQ4_0**: PolarQuant 3-bit and 4-bit Stage 1-only formats.
-- **64-wide variants**: `tbq3_0_64`, `tbq4_0_64`, `pq3_0_64`, and `pq4_0_64` for models with smaller attention head dimensions.
-- **Backend support**: CPU quantization/dequantization and Vulkan inference kernels, including attention paths and mixed K/V cache configurations. CUDA and Metal do not include TurboQuant kernels in this release.
-- **Test coverage**: performance coverage via [test-kv-cache-quantization-perf.sh](tests/test-kv-cache-quantization-perf.sh), perplexity coverage via [test-kv-cache-quantization-perp.sh](tests/test-kv-cache-quantization-perp.sh), and eval coverage via [test-kv-cache-ruler.py](tests/test-kv-cache-ruler.py), [test-kv-cache-niah.py](tests/test-kv-cache-niah.py), [test-kv-cache-longbench.py](tests/test-kv-cache-longbench.py), [test-kv-cache-zeroscrolls.py](tests/test-kv-cache-zeroscrolls.py), and [test-kv-cache-leval.py](tests/test-kv-cache-leval.py).
+**Six levels.** Each level measures its own error, so a final token match cannot hide a wrong intermediate state:
 
-**Qwen3.5-4B Q8_0 benchmark highlights:**
+| Level | What is compared | Result |
+|---|---|---|
+| L0 | GGUF tensors vs HF checkpoint (independent checker) | 290/290 bitwise identical; 205/205 layout tests (a transposed weight is caught); 30/30 metadata keys |
+| L1 | Each op alone: GDN vs an fp64 oracle; NSA ops vs fla's own code on identical tensors | GDN 636/636 checks, NRMSE ~1e-7; NSA 576/576 checks |
+| L2 | Hidden state after each of the 24 layers (2K prompt) | NRMSE grows smoothly to at most 3.3e-4 (CPU) and 6.1e-4 (CUDA); no jump at any layer |
+| L3 | Prefill logits at every position, incl. lengths at block/window boundaries | top-1 100% up to 2048 tokens, mean KL ≤ 6e-7 (2.4e-6 on a 6-token prompt) |
+| L4 | Prefill of S tokens, then token-by-token decode (S = 1 … 513) | top-1 100%, KL ≤ 3.3e-7 |
+| L5 | CPU vs GPU, greedy generation, GPU placement | CPU vs GPU KL ≤ 5.3e-7 (2.4e-6 on a 6-token prompt); 32/32 greedy tokens identical to HF `generate()` (CUDA, short and 2K prompts) |
+| Functional | RULER single-needle retrieval (S-NIAH) subset, 180 samples at 1K/2K/4K | reference 65.0 = CPU 65.0 = GPU 65.0; same outcome on all 180 samples |
 
-| Context | Cache config | BPW | RTX 5090 pp | RTX 5090 tg | Strix Halo pp | Strix Halo tg |
-| :-- | :-- | --: | --: | --: | --: | --: |
-| 2k | `f16/f16` | 16.00 | 14,538 t/s (baseline) | 236.02 t/s (baseline) | 1,750 t/s (baseline) | 42.30 t/s (baseline) |
-| 2k | `pq4_0/pq4_0` | 4.25 | 0.96x | 0.96x | 0.94x | 0.99x |
-| 2k | `pq3_0/pq3_0` | 3.25 | 0.96x | 0.96x | 0.95x | 0.99x |
-| 2k | `tbq4_0/pq4_0` | 4.75 | 0.71x | 0.94x | 0.60x | 0.97x |
-| 2k | `tbq3_0/pq3_0` | 3.75 | 0.71x | 0.94x | 0.60x | 0.98x |
-| 8k | `f16/f16` | 16.00 | 13,981 t/s (baseline) | 236.67 t/s (baseline) | 1,585 t/s (baseline) | 42.46 t/s (baseline) |
-| 8k | `pq4_0/pq4_0` | 4.25 | 0.89x | 0.96x | 0.82x | 0.99x |
-| 8k | `pq3_0/pq3_0` | 3.25 | 0.89x | 0.96x | 0.85x | 0.99x |
-| 8k | `tbq4_0/pq4_0` | 4.75 | 0.42x | 0.94x | 0.32x | 0.97x |
-| 8k | `tbq3_0/pq3_0` | 3.75 | 0.43x | 0.94x | 0.32x | 0.97x |
+NRMSE = RMS error / RMS of the reference; KL = mean KL divergence of the next-token distributions; top-1 = how often
+the most likely next token is the same.
 
-Quality checks on Qwen3.5-4B Q8_0 show `tbq4_0/pq4_0` at -0.03% perplexity delta versus `f16/f16`, with 94.8% RULER main score and 37.04 LongBench average versus 37.52 for `f16/f16`. See the full [TurboQuant benchmark report](docs/turboquant-benchmarks.md) for all measured models, contexts, and quality results.
+**Tolerances**, fixed before the runs:
 
-### Weight Prefetch for Offloaded Models
+- **Logits:** NRMSE ≤ 2e-3, mean KL ≤ 1e-5, top-1 ≥ 99.5%. Every top-1 miss must be a near tie in the reference (top-1/top-2 logit margin < 0.05).
+- **Selected blocks:** ≥ 99% of the block sets must match exactly, and every mismatch must be a near tie (score margin < 1e-3).
+- **Single ops:** GDN output NRMSE ≤ 1e-4. NSA ops with F32 K/V: max abs ≤ 1e-4 and NRMSE ≤ 1e-3; with F16 K/V: max abs ≤ 4e-3, since F16 rounding alone is about 5e-4. The two CUDA branches that use cuBLAS get max abs ≤ 5e-4 with F32 K/V, because of TF32 (below).
 
-`-pw/--prefetch-weights 0|1|auto` overlaps CPU-to-GPU weight transfers with compute when only part of a model fits in VRAM. `auto` (the default) enables it for fitted dense models. The scheduler also exposes prefetch, reserve-size and shared-compute-buffer APIs (`ggml_backend_sched_*`) for embedding applications.
+**Why block selection needs a near-tie rule.** Picking the top 16 blocks is discrete: when two scores differ only by
+float noise, either pick is valid. At 4K the port matches the kernel reference (fp16 q/k/v) on 99.77% (CPU) and 99.74%
+(CUDA) of block sets, and the fp32 reference more often (99.97% CPU, 99.89% CUDA). Every mismatch with the kernel
+reference has a score margin below 1e-4.
 
-### Mobile GPU Optimization
+**CUDA prefill is about 2× further from the reference than CPU** (logit NRMSE 2.3e-4 vs 1.0e-4, 2K prompt). The cause
+is TF32, a lower-precision tensor-core mode that the existing CUDA backend uses for F32 cuBLAS matmuls, not the new
+kernels: without TF32 the op errors drop to the F32 level, and CUDA decode (no TF32 matmul) is as close as CPU.
 
-Enhanced GPU support with targeted optimizations for Qualcomm Adreno GPUs.
+Full method and every number: [tests/gdn-nsa-test/REPORT.md](tests/gdn-nsa-test/REPORT.md).
 
-- **Vulkan on Adreno 800+**: quantized inference (Q4_0, Q8) and LoRA fine-tuning for Gemma3, Qwen3, and BitNet (TQ2_0) model architectures.
-- **OpenCL on Adreno**: inference support for all other model architectures.
-- Adreno-specific Vulkan shader variants for improved throughput.
-- Vulkan Memory Allocator (VMA) integration for efficient GPU memory management.
+## 5. Tests and evidence
 
-### VisionPsy Nano / Flash Support
+- **Op tests** (`tests/test-backend-ops.cpp`, CUDA vs CPU):
+  - `NSA_SELECT`: 8/8, including decode, positions with no complete block, and large query groups; also checked against block scores recomputed in double precision.
+  - `NSA_SEL_ATTN`: 101/101, including F16/F32/Q8_0/Q4_0 K/V, decode with split-K, the sliding window, odd shapes, and the transposed V cache layout.
+  ```bash
+  build-cuda/bin/test-backend-ops test -b CUDA0 -o NSA_SELECT
+  build-cuda/bin/test-backend-ops test -b CUDA0 -o NSA_SEL_ATTN
+  ```
+- **Independent op check** (`nsa-mask-ref`): recomputes the new ops with existing ggml ops only (dense masked attention), up to a 32K context, on both backends. Attention agrees to a normalized squared error ≤ 2.1e-7; CPU and CUDA selections are bit-identical.
+- **Validation suite** (`tests/gdn-nsa-test/`, [README](tests/gdn-nsa-test/README.md)):
+  - `scripts/run_validation.sh`: model-level runs against the stored reference outputs, about 9 minutes on one GPU.
+  - `scripts/run_levels.sh`: runs the L0–L4 checks and writes `report.md`, 37 PASS/FAIL checks over L0–L5.
+  - The results of the final run are in `tests/gdn-nsa-test/results/`.
+  - Generating the reference outputs needs the checkpoint and a separate PyTorch environment; the commands are in [§9](#9-run-everything-copy-paste).
 
-Run VisionPsy Nano and Flash vision-language models through the multimodal subsystem using compatible GGUF models and projectors.
+## 6. Performance and memory
 
-- **Image sizing**: `--image-no-upscale on` enables the Flash preprocessing rule, rounding image sizes to the slice grid without always stretching smaller images to the maximum size. Use it for Flash projectors that do not declare this rule in GGUF metadata.
-- **Memory-aware vision attention**: automatic flash-attention selection accounts for image size and device memory on backends without efficient cooperative-matrix flash attention.
+NVIDIA B200; F32 weights, F16 KV cache, `llama-bench -r 5` (`tests/gdn-nsa-test/results/model/bench_cuda.md`).
 
----
+| CUDA (tokens/s) | Context 0 | Context 1024 | Context 3072 |
+|---|---|---|---|
+| Prompt processing, 2048 tokens | 39,919 | 35,895 | 37,139 |
+| Generation, 128 tokens | 460 | 431 | 402 |
 
-## Quick Start
+CPU: Intel Xeon Platinum 8570, 64 threads, same settings (`tests/gdn-nsa-test/results/model/bench_cpu.md`).
 
-### Building from Source
+| CPU (tokens/s) | Context 0 | Context 3072 |
+|---|---|---|
+| Prompt processing, 2048 tokens | 1,099 | 1,039 |
+| Generation, 64 tokens | 58 | 22 |
+
+- **On CUDA, generation slows only 13% from 0 to 3072 tokens of context** (460 → 402 tokens/s). At a 4K context an NSA query reads about 1.7K K/V rows (selected blocks, window, block means) instead of 4K.
+- **Routing the sliding window through the sparse op** instead of a dense masked attention makes prefill 1.38× faster at 3072 tokens of context (37.1K vs 26.9K tokens/s).
+
+**Memory** (4096-token context, one sequence):
+
+| | Size |
+|---|---|
+| Weights (F32 GGUF) | 1367 MiB |
+| KV cache, F16 (12 NSA layers) | 24 MiB (6 KiB per token) |
+| GDN recurrent state (12 GDN layers) | 6.42 MiB |
+
+## 7. Known limitations
+
+- **One sequence per context.** The block math needs KV cell = position. `n_seq_max > 1` is rejected with an error; context shift is not supported.
+- **Kernels exist for CPU and CUDA only.** On any other GPU backend the two NSA ops would run on the CPU.
+- **KV cache types:** F16/F32, or any pair of F16/Q8_0/Q4_0. Other types are rejected with an error that names the supported ones.
+- **Block means are recomputed** over the whole cache at every step. This is cheap (O(context) per layer) but redundant.
+- **Long contexts:** the CUDA selection op keeps all block scores in shared memory, which on the B200 fits about 200K tokens (fewer on GPUs with less shared memory). Beyond that it runs on the CPU without a warning. The model was trained at 4K.
+- **Near ties:** at the model level, CPU and CUDA can still pick different blocks where two scores are almost equal, because their inputs differ slightly (TF32 on CUDA).
+- **Tokenizer:** the checkpoint ships only `tokenizer.json`, mapped to llama.cpp's SentencePiece tokenizer with merge ranks as scores. This approximates BPE. The validation runs feed token ids from the HF tokenizer, so they do not test this mapping.
+- **Quantized weights** are not part of the shipped results: `results/` covers F32 weights with F16, Q8_0 and Q4_0 KV caches.
+
+## 8. Bonus: quantization
+
+**Weights** (standard `llama-quantize` presets such as Q8_0, Q6_K or Q4_K_M; the NSA ops never read weights, so no new
+kernels are needed). Step 10 of [§9](#9-run-everything-copy-paste) quantizes the model and compares it with the fp32
+reference on the 4K prompt; those runs are not part of `results/`.
+
+**KV cache** (`-ctk` / `-ctv`; the NSA kernels read the quantized cache directly). CUDA, 4000-token prompt, against the
+fp32 reference (`tests/gdn-nsa-test/results/model/kvq_summary.md`):
+
+| KV cache | Size at 4096 tokens | Δ perplexity | Same top-1 token as the fp32 reference |
+|---|---|---|---|
+| F16 | 24.00 MiB | +0.00% | 99.98% |
+| Q8_0 | 12.75 MiB | +0.00% | 99.70% |
+| Q4_0 | 6.75 MiB | +0.51% | 95.95% |
+| K Q8_0, V Q4_0 | 9.75 MiB | +0.12% | 98.32% |
+
+- Attention over a quantized cache is bit-identical to attention over the same values dequantized to F32, on CPU and CUDA.
+- Against a PyTorch reference that quantizes K/V exactly like ggml, the remaining difference is about the same as between the port's own CPU and CUDA runs (Q8_0, 2K prompt: KL 5.4e-6 vs 5.6e-6).
+
+## 9. Run everything (copy-paste)
+
+Run the blocks in order from the repository root, in one shell. Only the variables in step 0 need editing. Each
+step ends with the command that shows its result.
 
 ```bash
-git clone https://github.com/tetherto/qvac-fabric-llm.cpp.git
-cd qvac-fabric-llm.cpp
-
-# Standard build
-cmake -B build
-cmake --build build --config Release
-
-# With Vulkan support (Android, Windows, Linux)
-cmake -B build -DGGML_VULKAN=ON
-cmake --build build --config Release
-
-# With Metal support (macOS, iOS)
-cmake -B build -DGGML_METAL=ON
-cmake --build build --config Release
-
-# With Core ML / Apple Neural Engine sidecars (macOS 15+, requires Metal)
-cmake -B build -DGGML_METAL=ON -DLLAMA_COREML=ON
-cmake --build build --config Release
-
-# With AMD XDNA NPU support (Linux, Strix-class APUs)
-cmake -B build -DGGML_XDNA=ON -DGGML_OPENMP=ON \
-      -DGGML_XDNA_GEMM_PYTHON=$HOME/aie-env/bin/python
-cmake --build build --config Release
+# 0. settings: work dir (checkpoint, reference env, outputs), GPU index (nvidia-smi), CPU threads
+export WORK=$HOME/gdn-nsa-work GPU=0 THREADS=64 CUDA_ARCH=100   # CUDA_ARCH 100 = B200
+export CUDA_VISIBLE_DEVICES=$(nvidia-smi -i $GPU --query-gpu=uuid --format=csv,noheader | tr -d ' ')
+mkdir -p $WORK
 ```
-
-For more detailed build instructions, see [docs/build.md](docs/build.md).
-
-### Running a Model
 
 ```bash
-# Run a model with Vulkan GPU acceleration, 4096 context length, and a prompt
-./build/bin/llama-cli -m model.gguf -ngl 99 -c 4096 -p "Explain quantum computing in simple terms"
+# 1. build: CPU, CUDA (arch 100 = B200; set yours) and the validation tools (-> build-gdn-nsa/)
+cmake -S . -B build-cpu  -G Ninja -DCMAKE_BUILD_TYPE=Release -DLLAMA_BUILD_TESTS=ON
+cmake -S . -B build-cuda -G Ninja -DCMAKE_BUILD_TYPE=Release -DLLAMA_BUILD_TESTS=ON -DGGML_CUDA=ON -DCMAKE_CUDA_ARCHITECTURES=$CUDA_ARCH
+cmake --build build-cpu  -j --target llama llama-completion llama-bench test-backend-ops
+cmake --build build-cuda -j --target llama llama-completion llama-bench llama-quantize test-backend-ops
+tests/gdn-nsa-test/scripts/build.sh
 ```
 
----
+```bash
+# 2. python 3.11 environment (also the reference environment of step 5), download and convert to GGUF
+conda create -y -p $WORK/env python=3.11        # or: python3.11 -m venv $WORK/env (the flash-attn wheel is cp311)
+$WORK/env/bin/pip install torch==2.7.0 --index-url https://download.pytorch.org/whl/cu128
+$WORK/env/bin/pip install transformers==4.49.0 datasets==5.0.1 einops==0.8.2 safetensors==0.8.0 numpy==2.4.6 sentencepiece
+$WORK/env/bin/hf download Idiap/gated-deltanet-nsa-0.4B-10B --revision c283b044b5688da94e46ebbd2c50078c2c9b11ef --local-dir $WORK/ckpt
+$WORK/env/bin/python convert_hf_to_gguf.py $WORK/ckpt --outtype f32 --outfile $WORK/gdn-nsa-0.4B-f32.gguf
+export MODEL=$WORK/gdn-nsa-0.4B-f32.gguf
+```
 
-## Supported Platforms
+```bash
+# 3. real output: CPU build, then CUDA build (the same text is expected)
+P="The capital of France is Paris. The capital of Germany is"
+build-cpu/bin/llama-completion  -m $MODEL -p "$P" -n 24 --temp 0 -no-cnv -t $THREADS 2>/dev/null
+build-cuda/bin/llama-completion -m $MODEL -p "$P" -n 24 --temp 0 -no-cnv -ngl 99 2>/dev/null
+```
 
-| Platform | Backend | Status |
-| :-- | :-- | :--: |
-| Linux (x86_64, ARM64) | CPU, Vulkan, CUDA, OpenCL | ✅ Full support |
-| Linux (Ryzen AI / Strix) | XDNA NPU (XDNA2) | ✅ Inference backend |
-| macOS (Intel, Apple Silicon) | CPU, Metal, Core ML (Apple silicon) | ✅ Full support |
-| Windows (x86_64) | CPU, Vulkan, CUDA | ✅ Full support |
-| Android (ARM64) | CPU, Vulkan, OpenCL | ✅ Full support |
-| iOS | CPU, Metal | ✅ Full support |
+```bash
+# 4. op tests, CUDA vs CPU (expect "8/8 tests passed" and "101/101 tests passed")
+build-cuda/bin/test-backend-ops test -b CUDA0 -o NSA_SELECT
+build-cuda/bin/test-backend-ops test -b CUDA0 -o NSA_SEL_ATTN
+```
 
----
+```bash
+# 5. reference code (flash-attn, the authors' fla fork) and the reference outputs ("golden")
+$WORK/env/bin/pip install --no-deps https://github.com/Dao-AILab/flash-attention/releases/download/v2.8.3/flash_attn-2.8.3+cu12torch2.7cxx11abiTRUE-cp311-cp311-linux_x86_64.whl
+git clone https://github.com/idiap/hybrid-linear-sparse-attention $WORK/ref-repo
+git -C $WORK/ref-repo checkout b786cbc625c0427a5becaa4ff11d9f73ecbf42eb
+$WORK/env/bin/pip install --no-deps -e $WORK/ref-repo
+export PY=$WORK/env/bin/python GOLDEN=$WORK/golden GDN_NSA_CKPT=$WORK/ckpt GDN_NSA_GOLDEN=$WORK/golden
+mkdir -p $GOLDEN
+$PY tests/gdn-nsa-test/reference/check_flash_attn.py          # flash-attn window vs fp32 SDPA
+$PY tests/gdn-nsa-test/reference/prep_prompts.py              # prompts: tokens_{short,len600,len2k,len4k}.txt
+$PY tests/gdn-nsa-test/reference/run_ref.py --stage kernel --prompts short,len600,len2k
+$PY tests/gdn-nsa-test/reference/run_ref.py --stage kernel --prompts len4k
+$PY tests/gdn-nsa-test/reference/run_ref.py --stage fp32   --prompts short,len600
+$PY tests/gdn-nsa-test/reference/run_ref.py --stage fp32   --prompts len2k,len4k
+$PY tests/gdn-nsa-test/reference/run_ref.py --stage greedy --prompts short
+$PY tests/gdn-nsa-test/reference/run_ref.py --stage greedy --prompts len2k
+for kv in q8_0 q4_0; do $PY tests/gdn-nsa-test/reference/run_ref.py --stage fp32 --kv-fake-quant $kv --prompts short,len600,len2k,len4k; done
+$PY tests/gdn-nsa-test/reference/run_ref.py --stage compare   # reference kernel vs reference fp32
+ls $GOLDEN
+```
 
-## Relationship with llama.cpp
+```bash
+# 6. model level (L2, L3, L5, quantized KV cache) against the reference, about 9 minutes
+tests/gdn-nsa-test/scripts/run_validation.sh $GPU $WORK/results
+$PY tests/gdn-nsa-test/analysis/summarize.py $WORK/results $GOLDEN   # logits, block sets, greedy, decode, perplexity
+cat $WORK/results/nsa-mask-ref.txt $WORK/results/sched_summary.txt  # existing-op check; nodes per backend
+cat $WORK/results/kvq/summary.md                                    # quantized KV cache
+```
 
-qvac-fabric-llm.cpp is a maintained fork of [llama.cpp](https://github.com/ggml-org/llama.cpp). The project regularly synchronizes with upstream releases to incorporate improvements, bug fixes, and new model support, while extending the engine with capabilities not present in the upstream project.
+```bash
+# 7. level checks L0-L4 and the PASS/FAIL report (37 checks); the NSA fixtures (351 MB) are made on first use
+CKPT=$WORK/ckpt REFREPO=$WORK/ref-repo MODEL_RESULTS=$WORK/results FIXTURES=$WORK/fixtures/nsa \
+  tests/gdn-nsa-test/scripts/run_levels.sh $GPU $WORK/results-levels
+cat $WORK/results-levels/report.md
+```
 
-**Current upstream baseline:** llama.cpp b10796
+```bash
+# 8. functional benchmark: RULER S-NIAH subset (180 samples; the CPU part is the slowest step)
+$WORK/env/bin/pip install --target $WORK/ruler/pylib nltk==3.10.4 wonderwords==3.0.1
+PYTHONPATH=$WORK/ruler/pylib $PY -m nltk.downloader -d $WORK/ruler/nltk_data punkt punkt_tab
+R=$WORK/ruler
+PYTHONPATH=$R/pylib NLTK_DATA=$R/nltk_data $PY tests/gdn-nsa-test/bench/make_ruler_niah.py --ckpt $WORK/ckpt --out $R --cache $R/src
+build-gdn-nsa/nsa-generate-cuda -m $MODEL -i $R/ruler_niah.txt -o $R/gen_ggml_cuda.txt -ngl 99
+build-gdn-nsa/nsa-generate-cpu  -m $MODEL -i $R/ruler_niah.txt -o $R/gen_ggml_cpu.txt  -t $THREADS
+$PY tests/gdn-nsa-test/bench/run_fla.py --ckpt $WORK/ckpt --data $R/ruler_niah.jsonl --out $R/gen_fla.txt --max-new 64
+$PY tests/gdn-nsa-test/bench/score_ruler.py --dir $R --ckpt $WORK/ckpt
+cat $R/ruler_report.md
+```
 
-### Upstream Compatibility
+```bash
+# 9. performance: CUDA, CPU, quantized KV cache, single ops
+build-cuda/bin/llama-bench -m $MODEL -ngl 99 -p 512,2048 -n 128 -d 0,1024,3072 -r 5
+build-cpu/bin/llama-bench  -m $MODEL -t $THREADS -p 512,2048 -n 64 -d 0,3072 -r 5
+for kv in f16 q8_0 q4_0; do build-cuda/bin/llama-bench -m $MODEL -ngl 99 -fa 1 -ctk $kv -ctv $kv -p 2048 -n 128 -d 0,3072,16384,32768 -r 5; done
+LLAMA_NSA_DENSE_SWA=1 build-cuda/bin/llama-bench -m $MODEL -ngl 99 -p 2048 -n 128 -d 3072 -r 5   # dense-window comparison
+build-cuda/bin/test-backend-ops perf -b CUDA0 -o NSA_SELECT
+build-cuda/bin/test-backend-ops perf -b CUDA0 -o NSA_SEL_ATTN
+```
 
-All standard llama.cpp functionality, models, and APIs remain fully compatible.
+```bash
+# 10. quantized weights, e.g. Q4_K_M: quantize, run the 4K prompt, compare with the fp32 reference
+build-cuda/bin/llama-quantize $MODEL $WORK/gdn-nsa-0.4B-Q4_K_M.gguf Q4_K_M
+build-gdn-nsa/nsa-dump-cuda -m $WORK/gdn-nsa-0.4B-Q4_K_M.gguf -t $GOLDEN/tokens_len4k.txt -o $WORK/q4_k_m --mode prefill -ngl 99
+$PY tests/gdn-nsa-test/analysis/compare.py --ref $GOLDEN/logits_len4k_fp32.npy --ours $WORK/q4_k_m.logits.bin
+```
 
-- Any GGUF model supported by llama.cpp is supported by qvac-fabric-llm.cpp
-- Existing llama.cpp documentation applies to shared functionality
-
----
-
-## Contributing
-
-We welcome contributions! Please see our development workflow:
-
-1. Fork the repository
-2. Create a feature branch from `master`
-3. Submit a pull request
-
----
-
-## License
-
-MIT License - see [LICENSE](LICENSE) for details.
-
-qvac-fabric-llm.cpp is built on [llama.cpp](https://github.com/ggml-org/llama.cpp) by Georgi Gerganov and contributors.
-
----
-
-For additional documentation, refer to the [llama.cpp documentation](https://github.com/ggml-org/llama.cpp/tree/master/docs).
-
-## Dependencies
-
-- [yhirose/cpp-httplib](https://github.com/yhirose/cpp-httplib) - Single-header HTTP server, used by `llama-server` - MIT license
-- [stb-image](https://github.com/nothings/stb) - Single-header image format decoder, used by multimodal subsystem - Public domain
-- [nlohmann/json](https://github.com/nlohmann/json) - Single-header JSON library, used by various tools/examples - MIT License
-- [minja](https://github.com/google/minja) - Minimal Jinja parser in C++, used by various tools/examples - MIT License
-- [linenoise.cpp](./tools/run/linenoise.cpp/linenoise.cpp) - C++ library that provides readline-like line editing capabilities, used by `llama-run` - BSD 2-Clause License
-- [curl](https://curl.se/) - Client-side URL transfer library, used by various tools/examples - [CURL License](https://curl.se/docs/copyright.html)
-- [miniaudio.h](https://github.com/mackron/miniaudio) - Single-header audio format decoder, used by multimodal subsystem - Public domain
+The results of the author's run of steps 4, 6, 7 and 8 are in `tests/gdn-nsa-test/results/` (`model/`, `levels/`,
+`bench/`; step 6's `kvq/summary.md` is `model/kvq_summary.md`), so they can be compared with yours.

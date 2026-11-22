@@ -1,0 +1,24 @@
+{
+ "label": "short cuda_prefill vs fp32-ref",
+ "logits": {
+  "T": 6,
+  "max_abs": 0.014781951904296875,
+  "mean_abs": 0.002413331065326929,
+  "kl_mean": 2.2296487305426565e-06,
+  "kl_max": 6.955876853927145e-06,
+  "top1_agree": 1.0,
+  "argmax_pos_max_abs": 5,
+  "band_0_512": {
+   "max_abs": 0.014781951904296875,
+   "kl_mean": 2.2296487305426565e-06,
+   "top1": 1.0
+  }
+ },
+ "blocks": {
+  "sets": 144,
+  "exact_set_agree": 1.0,
+  "mean_overlap": 1.0,
+  "n_mismatch": 0,
+  "first_mismatches": []
+ }
+}

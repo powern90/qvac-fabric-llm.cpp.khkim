@@ -1,0 +1,2 @@
+<workdir>/results5/len600_cuda_sched_prefill.log: nodes per backend {'CPU': 16, 'CUDA0': 8024}; non-GPU nodes {'GET_ROWS:embd': 8, 'GET_ROWS:node_1': 8}; NSA nodes {'NSA_SELECT@CUDA0': 96, 'NSA_SEL_AT@CUDA0': 192}
+<workdir>/results5/len600_cuda_sched_decode.log: nodes per backend {'CPU': 22, 'CUDA0': 11033}; non-GPU nodes {'GET_ROWS:embd': 11, 'GET_ROWS:node_1': 11}; NSA nodes {'NSA_SELECT@CUDA0': 132, 'NSA_SEL_AT@CUDA0': 264}

@@ -1,0 +1,36 @@
+ggml_cuda_init: found 1 CUDA devices (Total VRAM: 182624 MiB):
+  Device 0: NVIDIA B200, compute capability 10.0, VMM: yes, VRAM: 182624 MiB
+CUDA0    sel_attn vs dense-mask: nmse 5.69e-08 max_abs 2.31e-04 | transposed V: nmse 5.69e-08 (vs V rows: max_abs 0.00e+00) | sparse window vs dense window: nmse 6.84e-08 max_abs 3.13e-04 | select vs topk-composition: 1019/1022 sets equal, worst swapped score gap 2.01e-07  OK
+CUDA0    q8_0 K/V: sel_attn(quant) vs sel_attn(dequant F32): nmse 0.00e+00 max_abs 0.00e+00 | cast vs host dequant: max_abs 0.00e+00  OK
+CUDA0    q4_0 K/V: sel_attn(quant) vs sel_attn(dequant F32): nmse 0.00e+00 max_abs 0.00e+00 | cast vs host dequant: max_abs 0.00e+00  OK
+CPU      sel_attn vs dense-mask: nmse 2.94e-08 max_abs 1.49e-04 | transposed V: nmse 2.94e-08 (vs V rows: max_abs 0.00e+00) | sparse window vs dense window: nmse 3.52e-08 max_abs 2.60e-04 | select vs topk-composition: 1022/1022 sets equal, worst swapped score gap 0.00e+00  OK
+CPU      q8_0 K/V: sel_attn(quant) vs sel_attn(dequant F32): nmse 0.00e+00 max_abs 0.00e+00 | cast vs host dequant: max_abs 0.00e+00  OK
+CPU      q4_0 K/V: sel_attn(quant) vs sel_attn(dequant F32): nmse 0.00e+00 max_abs 0.00e+00 | cast vs host dequant: max_abs 0.00e+00  OK
+CUDA0    select vs CPU: 1024/1024 rows identical  OK
+ggml_cuda_init: found 1 CUDA devices (Total VRAM: 182624 MiB):
+  Device 0: NVIDIA B200, compute capability 10.0, VMM: yes, VRAM: 182624 MiB
+CUDA0    sel_attn vs dense-mask: nmse 1.28e-13 max_abs 8.20e-08 | transposed V: nmse 1.28e-13 (vs V rows: max_abs 0.00e+00) | sparse window vs dense window: nmse 1.24e-13 max_abs 1.49e-07 | select vs topk-composition: 2/2 sets equal, worst swapped score gap 0.00e+00  OK
+CUDA0    q8_0 K/V: sel_attn(quant) vs sel_attn(dequant F32): nmse 0.00e+00 max_abs 0.00e+00 | cast vs host dequant: max_abs 0.00e+00  OK
+CUDA0    q4_0 K/V: sel_attn(quant) vs sel_attn(dequant F32): nmse 0.00e+00 max_abs 0.00e+00 | cast vs host dequant: max_abs 0.00e+00  OK
+CPU      sel_attn vs dense-mask: nmse 5.11e-08 max_abs 6.24e-05 | transposed V: nmse 5.11e-08 (vs V rows: max_abs 0.00e+00) | sparse window vs dense window: nmse 3.80e-08 max_abs 5.51e-05 | select vs topk-composition: 2/2 sets equal, worst swapped score gap 0.00e+00  OK
+CPU      q8_0 K/V: sel_attn(quant) vs sel_attn(dequant F32): nmse 0.00e+00 max_abs 0.00e+00 | cast vs host dequant: max_abs 0.00e+00  OK
+CPU      q4_0 K/V: sel_attn(quant) vs sel_attn(dequant F32): nmse 0.00e+00 max_abs 0.00e+00 | cast vs host dequant: max_abs 0.00e+00  OK
+CUDA0    select vs CPU: 2/2 rows identical  OK
+ggml_cuda_init: found 1 CUDA devices (Total VRAM: 182624 MiB):
+  Device 0: NVIDIA B200, compute capability 10.0, VMM: yes, VRAM: 182624 MiB
+CUDA0    sel_attn vs dense-mask: nmse 2.01e-07 max_abs 1.24e-04 | transposed V: nmse 2.01e-07 (vs V rows: max_abs 0.00e+00) | sparse window vs dense window: nmse 2.07e-07 max_abs 2.75e-04 | select vs topk-composition: 8/8 sets equal, worst swapped score gap 0.00e+00  OK
+CUDA0    q8_0 K/V: sel_attn(quant) vs sel_attn(dequant F32): nmse 0.00e+00 max_abs 0.00e+00 | cast vs host dequant: max_abs 0.00e+00  OK
+CUDA0    q4_0 K/V: sel_attn(quant) vs sel_attn(dequant F32): nmse 0.00e+00 max_abs 0.00e+00 | cast vs host dequant: max_abs 0.00e+00  OK
+CPU      sel_attn vs dense-mask: nmse 4.68e-08 max_abs 1.19e-04 | transposed V: nmse 4.68e-08 (vs V rows: max_abs 0.00e+00) | sparse window vs dense window: nmse 4.62e-08 max_abs 1.88e-04 | select vs topk-composition: 8/8 sets equal, worst swapped score gap 0.00e+00  OK
+CPU      q8_0 K/V: sel_attn(quant) vs sel_attn(dequant F32): nmse 0.00e+00 max_abs 0.00e+00 | cast vs host dequant: max_abs 0.00e+00  OK
+CPU      q4_0 K/V: sel_attn(quant) vs sel_attn(dequant F32): nmse 0.00e+00 max_abs 0.00e+00 | cast vs host dequant: max_abs 0.00e+00  OK
+CUDA0    select vs CPU: 8/8 rows identical  OK
+ggml_cuda_init: found 1 CUDA devices (Total VRAM: 182624 MiB):
+  Device 0: NVIDIA B200, compute capability 10.0, VMM: yes, VRAM: 182624 MiB
+CUDA0    sel_attn vs dense-mask: nmse 6.83e-08 max_abs 2.92e-04 | transposed V: nmse 6.83e-08 (vs V rows: max_abs 0.00e+00) | sparse window vs dense window: nmse 7.44e-08 max_abs 5.13e-04 | select vs topk-composition: 2035/2046 sets equal, worst swapped score gap 4.30e-07  OK
+CUDA0    q8_0 K/V: sel_attn(quant) vs sel_attn(dequant F32): nmse 0.00e+00 max_abs 0.00e+00 | cast vs host dequant: max_abs 0.00e+00  OK
+CUDA0    q4_0 K/V: sel_attn(quant) vs sel_attn(dequant F32): nmse 0.00e+00 max_abs 0.00e+00 | cast vs host dequant: max_abs 0.00e+00  OK
+CPU      sel_attn vs dense-mask: nmse 3.53e-08 max_abs 2.41e-04 | transposed V: nmse 3.53e-08 (vs V rows: max_abs 0.00e+00) | sparse window vs dense window: nmse 3.85e-08 max_abs 2.95e-04 | select vs topk-composition: 2046/2046 sets equal, worst swapped score gap 0.00e+00  OK
+CPU      q8_0 K/V: sel_attn(quant) vs sel_attn(dequant F32): nmse 0.00e+00 max_abs 0.00e+00 | cast vs host dequant: max_abs 0.00e+00  OK
+CPU      q4_0 K/V: sel_attn(quant) vs sel_attn(dequant F32): nmse 0.00e+00 max_abs 0.00e+00 | cast vs host dequant: max_abs 0.00e+00  OK
+CUDA0    select vs CPU: 2048/2048 rows identical  OK

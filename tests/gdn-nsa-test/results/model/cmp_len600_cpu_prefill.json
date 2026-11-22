@@ -1,0 +1,29 @@
+{
+ "label": "len600 cpu_prefill vs kernel-ref",
+ "logits": {
+  "T": 600,
+  "max_abs": 0.005861759185791016,
+  "mean_abs": 0.000324737949995324,
+  "kl_mean": 8.019451122370743e-08,
+  "kl_max": 6.519260293575563e-07,
+  "top1_agree": 1.0,
+  "argmax_pos_max_abs": 538,
+  "band_0_512": {
+   "max_abs": 0.004309654235839844,
+   "kl_mean": 7.894252150862947e-08,
+   "top1": 1.0
+  },
+  "band_512_1024": {
+   "max_abs": 0.005861759185791016,
+   "kl_mean": 8.747881502052463e-08,
+   "top1": 1.0
+  }
+ },
+ "blocks": {
+  "sets": 14400,
+  "exact_set_agree": 1.0,
+  "mean_overlap": 1.0,
+  "n_mismatch": 0,
+  "first_mismatches": []
+ }
+}

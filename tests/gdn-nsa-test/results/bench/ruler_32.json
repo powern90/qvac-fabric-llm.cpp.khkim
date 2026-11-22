@@ -1,0 +1,2954 @@
+{
+ "cells": {
+  "S1_1024": {
+   "task": "niah_single_1",
+   "length": 1024,
+   "n": 20,
+   "paper": 100.0,
+   "fla": 100.0,
+   "n_fla": 20,
+   "cpu": 100.0,
+   "n_cpu": 20,
+   "gpu": 100.0,
+   "n_gpu": 20,
+   "n_common_cpu": 20,
+   "delta_cpu": 0.0,
+   "tok_agree_cpu": 20,
+   "corr_agree_cpu": 20,
+   "n_common_gpu": 20,
+   "delta_gpu": 0.0,
+   "tok_agree_gpu": 20,
+   "corr_agree_gpu": 20
+  },
+  "S1_2048": {
+   "task": "niah_single_1",
+   "length": 2048,
+   "n": 20,
+   "paper": 100.0,
+   "fla": 100.0,
+   "n_fla": 20,
+   "cpu": 100.0,
+   "n_cpu": 20,
+   "gpu": 100.0,
+   "n_gpu": 20,
+   "n_common_cpu": 20,
+   "delta_cpu": 0.0,
+   "tok_agree_cpu": 20,
+   "corr_agree_cpu": 20,
+   "n_common_gpu": 20,
+   "delta_gpu": 0.0,
+   "tok_agree_gpu": 20,
+   "corr_agree_gpu": 20
+  },
+  "S1_4096": {
+   "task": "niah_single_1",
+   "length": 4096,
+   "n": 20,
+   "paper": 65.0,
+   "fla": 55.0,
+   "n_fla": 20,
+   "cpu": 55.0,
+   "n_cpu": 20,
+   "gpu": 55.0,
+   "n_gpu": 20,
+   "n_common_cpu": 20,
+   "delta_cpu": 0.0,
+   "tok_agree_cpu": 20,
+   "corr_agree_cpu": 20,
+   "n_common_gpu": 20,
+   "delta_gpu": 0.0,
+   "tok_agree_gpu": 20,
+   "corr_agree_gpu": 20
+  },
+  "S2_1024": {
+   "task": "niah_single_2",
+   "length": 1024,
+   "n": 20,
+   "paper": 88.6,
+   "fla": 100.0,
+   "n_fla": 20,
+   "cpu": 100.0,
+   "n_cpu": 20,
+   "gpu": 100.0,
+   "n_gpu": 20,
+   "n_common_cpu": 20,
+   "delta_cpu": 0.0,
+   "tok_agree_cpu": 20,
+   "corr_agree_cpu": 20,
+   "n_common_gpu": 20,
+   "delta_gpu": 0.0,
+   "tok_agree_gpu": 20,
+   "corr_agree_gpu": 20
+  },
+  "S2_2048": {
+   "task": "niah_single_2",
+   "length": 2048,
+   "n": 20,
+   "paper": 100.0,
+   "fla": 75.0,
+   "n_fla": 20,
+   "cpu": 75.0,
+   "n_cpu": 20,
+   "gpu": 75.0,
+   "n_gpu": 20,
+   "n_common_cpu": 20,
+   "delta_cpu": 0.0,
+   "tok_agree_cpu": 20,
+   "corr_agree_cpu": 20,
+   "n_common_gpu": 20,
+   "delta_gpu": 0.0,
+   "tok_agree_gpu": 19,
+   "corr_agree_gpu": 20
+  },
+  "S2_4096": {
+   "task": "niah_single_2",
+   "length": 4096,
+   "n": 20,
+   "paper": 37.6,
+   "fla": 30.0,
+   "n_fla": 20,
+   "cpu": 30.0,
+   "n_cpu": 20,
+   "gpu": 30.0,
+   "n_gpu": 20,
+   "n_common_cpu": 20,
+   "delta_cpu": 0.0,
+   "tok_agree_cpu": 18,
+   "corr_agree_cpu": 20,
+   "n_common_gpu": 20,
+   "delta_gpu": 0.0,
+   "tok_agree_gpu": 18,
+   "corr_agree_gpu": 20
+  },
+  "S3_1024": {
+   "task": "niah_single_3",
+   "length": 1024,
+   "n": 20,
+   "paper": 97.6,
+   "fla": 20.0,
+   "n_fla": 20,
+   "cpu": 20.0,
+   "n_cpu": 20,
+   "gpu": 20.0,
+   "n_gpu": 20,
+   "n_common_cpu": 20,
+   "delta_cpu": 0.0,
+   "tok_agree_cpu": 20,
+   "corr_agree_cpu": 20,
+   "n_common_gpu": 20,
+   "delta_gpu": 0.0,
+   "tok_agree_gpu": 20,
+   "corr_agree_gpu": 20
+  },
+  "S3_2048": {
+   "task": "niah_single_3",
+   "length": 2048,
+   "n": 20,
+   "paper": 73.0,
+   "fla": 0.0,
+   "n_fla": 20,
+   "cpu": 0.0,
+   "n_cpu": 20,
+   "gpu": 0.0,
+   "n_gpu": 20,
+   "n_common_cpu": 20,
+   "delta_cpu": 0.0,
+   "tok_agree_cpu": 20,
+   "corr_agree_cpu": 20,
+   "n_common_gpu": 20,
+   "delta_gpu": 0.0,
+   "tok_agree_gpu": 20,
+   "corr_agree_gpu": 20
+  },
+  "S3_4096": {
+   "task": "niah_single_3",
+   "length": 4096,
+   "n": 20,
+   "paper": 11.8,
+   "fla": 0.0,
+   "n_fla": 20,
+   "cpu": 0.0,
+   "n_cpu": 20,
+   "gpu": 0.0,
+   "n_gpu": 20,
+   "n_common_cpu": 20,
+   "delta_cpu": 0.0,
+   "tok_agree_cpu": 20,
+   "corr_agree_cpu": 20,
+   "n_common_gpu": 20,
+   "delta_gpu": 0.0,
+   "tok_agree_gpu": 20,
+   "corr_agree_gpu": 20
+  }
+ },
+ "disagreements": {
+  "cpu": [
+   {
+    "id": "S2_4096_07",
+    "first_diff_step": 5,
+    "fla_score": 0.0,
+    "score": 0.0,
+    "fla_pred": "1.0. What is the special magic number for light-surplus mentioned in the provided text? The special magic number for light-surplus mentioned",
+    "pred": "1.0. The special magic number for light-surplus mentioned in the provided text is 1.0. The special magic number for light-"
+   },
+   {
+    "id": "S2_4096_10",
+    "first_diff_step": 9,
+    "fla_score": 1.0,
+    "score": 1.0,
+    "fla_pred": "5107245.\nWhat is the special magic number for yellow-step-sister mentioned in the provided text? The special magic",
+    "pred": "5107245. What is the special magic number for the number of people who die in a year? The special magic number for the"
+   }
+  ],
+  "gpu": [
+   {
+    "id": "S2_2048_02",
+    "first_diff_step": 11,
+    "fla_score": 1.0,
+    "score": 1.0,
+    "fla_pred": ": 4823498.\n[1] \"The Internet is the most powerful tool ever invented,\" says the late computer scientist Alan T",
+    "pred": ": 4823498.\nWhat is the special magic number for animated-porcupine mentioned in the provided text? The special magic"
+   },
+   {
+    "id": "S2_4096_07",
+    "first_diff_step": 5,
+    "fla_score": 0.0,
+    "score": 0.0,
+    "fla_pred": "1.0. What is the special magic number for light-surplus mentioned in the provided text? The special magic number for light-surplus mentioned",
+    "pred": "1.0. The special magic number for light-surplus mentioned in the provided text is 1.0. The special magic number for light-"
+   },
+   {
+    "id": "S2_4096_10",
+    "first_diff_step": 9,
+    "fla_score": 1.0,
+    "score": 1.0,
+    "fla_pred": "5107245.\nWhat is the special magic number for yellow-step-sister mentioned in the provided text? The special magic",
+    "pred": "5107245. What is the special magic number for the number of people who die in a year? The special magic number for the"
+   }
+  ]
+ },
+ "label": "RULER S-NIAH subset (our generator with RULER templates)",
+ "fla_worker_overlap": {
+  "n": 17,
+  "n_differ": 0
+ },
+ "average": {
+  "paper": 74.8,
+  "fla": 53.333333333333336,
+  "cpu": 53.333333333333336,
+  "gpu": 53.333333333333336,
+  "delta_cpu": 0.0,
+  "delta_gpu": 0.0
+ },
+ "per_sample": {
+  "fla": {
+   "S1_1024_00": {
+    "score": 1.0,
+    "pred": "8536477.\nThe special magic number for faulty-pimple is 8536477."
+   },
+   "S1_2048_00": {
+    "score": 1.0,
+    "pred": "8090293.\nThe special magic number for diligent-joke is 8090293.\nThe"
+   },
+   "S1_4096_00": {
+    "score": 0.0,
+    "pred": "12.\nThe special magic number for guarded-program mentioned in the provided text is 12.\nThe special magic number for guarded"
+   },
+   "S2_1024_00": {
+    "score": 1.0,
+    "pred": "2622631.\nThe special magic number for lovely-tritone mentioned in the provided text is 26226"
+   },
+   "S2_2048_00": {
+    "score": 1.0,
+    "pred": "8707870. July 2010What is the special magic number for yielding-notoriety mentioned in the provided"
+   },
+   "S2_4096_00": {
+    "score": 0.0,
+    "pred": "1.0. What is the special magic number for yielding-notoriety mentioned in the provided text? The special magic number for yielding-"
+   },
+   "S3_1024_00": {
+    "score": 0.0,
+    "pred": ": e2acf72f-9e57-4f7a-a0ee-89aed453dd3"
+   },
+   "S3_2048_00": {
+    "score": 0.0,
+    "pred": "the one that I've been using for the last 4 or 5 months. It's the one I've been using for the last"
+   },
+   "S3_4096_00": {
+    "score": 0.0,
+    "pred": "the magic of the magic of the magic of the magic of the magic of the magic of the magic of the magic of the magic of the magic of the magic"
+   },
+   "S1_1024_01": {
+    "score": 1.0,
+    "pred": "3678638.\nThe special magic number for abject-apron mentioned in the provided text is 36786"
+   },
+   "S1_2048_01": {
+    "score": 1.0,
+    "pred": "3608513.\nThe special magic number for guarded-program mentioned in the given text is 360851"
+   },
+   "S1_4096_01": {
+    "score": 0.0,
+    "pred": "12.\nWhat is the special magic number for instinctive-facsimile mentioned in the provided text? The special magic number for instinctive-"
+   },
+   "S2_1024_01": {
+    "score": 1.0,
+    "pred": ": 8707870. Most if not all the things we describe as addictive are. And the scary thing is, the process"
+   },
+   "S2_2048_01": {
+    "score": 0.0,
+    "pred": "1.\nWhat is the special magic number for scintillating-slipper mentioned in the provided text? The special magic number for scintill"
+   },
+   "S2_4096_01": {
+    "score": 0.0,
+    "pred": "1.00000000000000000000000000000"
+   },
+   "S3_1024_01": {
+    "score": 0.0,
+    "pred": ": 3b982ef8-daf6-4a26-946d-3f31fc377"
+   },
+   "S3_2048_01": {
+    "score": 0.0,
+    "pred": "that it's a strange thing to do. It's a strange thing to do when you're trying to live well. It's a strange"
+   },
+   "S3_4096_01": {
+    "score": 0.0,
+    "pred": "the special magic of the App Store. The App Store is a huge, huge, huge, huge, huge, huge, huge, huge, huge, huge"
+   },
+   "S1_1024_02": {
+    "score": 1.0,
+    "pred": "5661907.\nThe grass is green. The sky is blue. The sun is yellow. The sun is yellow. Here we"
+   },
+   "S1_2048_02": {
+    "score": 1.0,
+    "pred": "2714803.\nThe special magic number for instinctive-facsimile mentioned in the provided text is 2714"
+   },
+   "S1_4096_02": {
+    "score": 0.0,
+    "pred": "11.\nWhat is the special magic number for lovely-tritone mentioned in the provided text? The special magic number for lovely-trit"
+   },
+   "S2_1024_02": {
+    "score": 1.0,
+    "pred": ": 5918715. It's the same process that cures diseases: technological progress means making things do more of what we want"
+   },
+   "S2_2048_02": {
+    "score": 1.0,
+    "pred": ": 4823498.\n[1] \"The Internet is the most powerful tool ever invented,\" says the late computer scientist Alan T"
+   },
+   "S2_4096_02": {
+    "score": 0.0,
+    "pred": "1.0. The special magic number for late-embellishment mentioned in the provided text is 0.0. The special magic number for late"
+   },
+   "S3_1024_02": {
+    "score": 0.0,
+    "pred": ": d58842de-a2bc-472f-b412-b29347294"
+   },
+   "S3_2048_02": {
+    "score": 0.0,
+    "pred": "the one that's most likely to be used by the people who are most likely to be affected by the new technology. The special magicUE for discreet"
+   },
+   "S3_4096_02": {
+    "score": 0.0,
+    "pred": "the magic of the \"fork\" in the chain of events that leads to the creation of a new product. The special magic of the \"fork\""
+   },
+   "S1_1024_03": {
+    "score": 1.0,
+    "pred": "6647119.\nThe special magic number for fanatical-evidence is 6647119."
+   },
+   "S1_2048_03": {
+    "score": 1.0,
+    "pred": "2622631.\nThe special magic number for lovely-tritone mentioned in the provided text is 26226"
+   },
+   "S1_4096_03": {
+    "score": 0.0,
+    "pred": "12.\nWhat is the special magic number for jittery-hospital mentioned in the provided text? The special magic number for jittery"
+   },
+   "S2_1024_03": {
+    "score": 1.0,
+    "pred": ": 4823498.\nWhat is the special magic number for animated-porcupine mentioned in the provided text? The special magic"
+   },
+   "S2_2048_03": {
+    "score": 1.0,
+    "pred": "4905582. That usage is the same as the one for the 1990s. The special magic number for brain"
+   },
+   "S2_4096_03": {
+    "score": 0.0,
+    "pred": "1.00000000000000000000000000000"
+   },
+   "S3_1024_03": {
+    "score": 0.0,
+    "pred": ": ab9099a4-35a2-40ae-9af3-05535ec42e0"
+   },
+   "S3_2048_03": {
+    "score": 0.0,
+    "pred": "the one I've been using for the last 20 years. It's a special magic that's been around for 20 years."
+   },
+   "S3_4096_03": {
+    "score": 0.0,
+    "pred": "the special magic of the app store. The app store is a place where you can buy and sell things. It's a place where you can buy and"
+   },
+   "S1_1024_04": {
+    "score": 1.0,
+    "pred": "7374122.\nThe special magic number for capable-radiosonde mentioned in the provided text is 73741"
+   },
+   "S1_2048_04": {
+    "score": 1.0,
+    "pred": "5437923.\nThe special magic number for jittery-hospital is 5437923."
+   },
+   "S1_4096_04": {
+    "score": 0.0,
+    "pred": "1000000000000000000000000000000"
+   },
+   "S2_1024_04": {
+    "score": 1.0,
+    "pred": "4905582.\nThe special magic number for brainy-probe mentioned in the provided text is 490558"
+   },
+   "S2_2048_04": {
+    "score": 0.0,
+    "pred": "7110868. Checkers and solids, which are both more addictive than hiking, are both more addictive"
+   },
+   "S2_4096_04": {
+    "score": 0.0,
+    "pred": "1.0. The special magic number for brainy-probe mentioned in the provided text is 0.0. The special magic number for brainy"
+   },
+   "S3_1024_04": {
+    "score": 1.0,
+    "pred": ": 3eabedcb-baa8-4dd4-88bd-64072bcfbe01. When"
+   },
+   "S3_2048_04": {
+    "score": 0.0,
+    "pred": "that it's the same process that creates addictive new things we like. The special magicUE for teeny-tiny-kingdom mentioned in the"
+   },
+   "S3_4096_04": {
+    "score": 0.0,
+    "pred": "the special magic of the oval-salon. The special magic of the oval-salon is the special magic of the oval-salon"
+   },
+   "S1_1024_05": {
+    "score": 1.0,
+    "pred": "6770619.\nThe special magic number for lamentable-alcohol is 6770619."
+   },
+   "S1_2048_05": {
+    "score": 1.0,
+    "pred": "8707870.\nThe special magic number for yielding-notoriety mentioned in the provided text is 8707"
+   },
+   "S1_4096_05": {
+    "score": 0.0,
+    "pred": "12.\nWhat is the special magic number for crooked-grandmom mentioned in the provided text? The special magic number for crooked-"
+   },
+   "S2_1024_05": {
+    "score": 1.0,
+    "pred": ": 7120868. [1]No one doubts this process is accelerating, which means increasing numbers of things we like will be"
+   },
+   "S2_2048_05": {
+    "score": 0.0,
+    "pred": "6.\nWhat is the special magic number for the number of people who want to be free of addiction? The special magic number for the number of people"
+   },
+   "S2_4096_05": {
+    "score": 0.0,
+    "pred": "1.0. The special magic number for loving-cockroach mentioned in the provided text is 2.0. The special magic number for loving"
+   },
+   "S3_1024_05": {
+    "score": 1.0,
+    "pred": ": ece66fa2-fd51-46e6-851b-4cf36123fdf7"
+   },
+   "S3_2048_05": {
+    "score": 0.0,
+    "pred": "the one that's most likely to be used by people who want to live in a world where they can't afford to eat meat. The special magic"
+   },
+   "S3_4096_05": {
+    "score": 0.0,
+    "pred": "the special magic of the app store. The app store is a place where you can buy and sell apps. The app store is a place where you can buy"
+   },
+   "S1_1024_06": {
+    "score": 1.0,
+    "pred": "8707870.\nThe special magic number for amused-resource mentioned in the provided text is 870787"
+   },
+   "S1_2048_06": {
+    "score": 1.0,
+    "pred": "7350753.\nThe special magic number for crooked-grandmom mentioned in the provided text is 7350"
+   },
+   "S1_4096_06": {
+    "score": 0.0,
+    "pred": "12.\nWhat is the special magic number for scintillating-slipper mentioned in the provided text? The special magic number for scint"
+   },
+   "S2_1024_06": {
+    "score": 1.0,
+    "pred": ": 6960453. The closest is the colloquial sense of \"addictive.\" That usage has become increasingly common during"
+   },
+   "S2_2048_06": {
+    "score": 1.0,
+    "pred": ": 3871230. One of the special magic numbers for strong-hive mentioned in the provided text is: 387"
+   },
+   "S2_4096_06": {
+    "score": 0.0,
+    "pred": "1.0. The special magic number for telling-divorce mentioned in the provided text is 2.0. The special magic number for telling"
+   },
+   "S3_1024_06": {
+    "score": 0.0,
+    "pred": ": c4b032cc-d7c5-44a5-9304-317faf42e"
+   },
+   "S3_2048_06": {
+    "score": 0.0,
+    "pred": "the one that's most likely to be used by people who want to live or die. It's the one that's most likely to be used"
+   },
+   "S3_4096_06": {
+    "score": 0.0,
+    "pred": "the special magic of the flaky-endoderm. The special magic of the flaky-endoderm is the special magic of the flaky-"
+   },
+   "S1_1024_07": {
+    "score": 1.0,
+    "pred": "2322047.\nThe special magic number for loutish-copper is 2322047."
+   },
+   "S1_2048_07": {
+    "score": 1.0,
+    "pred": "5918715.\nThe special magic number for scintillating-slipper is 5918715."
+   },
+   "S1_4096_07": {
+    "score": 1.0,
+    "pred": "4226067.\nWhat is the special magic number for smoggy-caliber mentioned in the provided text? The special magic"
+   },
+   "S2_1024_07": {
+    "score": 1.0,
+    "pred": ": 3871230.\nWhat is the special magic number for strong-hive mentioned in the provided text? The special magic number"
+   },
+   "S2_2048_07": {
+    "score": 1.0,
+    "pred": "7366205.\nWhat is the special magic number for hiking? The special magic number for hiking mentioned in the provided text"
+   },
+   "S2_4096_07": {
+    "score": 0.0,
+    "pred": "1.0. What is the special magic number for light-surplus mentioned in the provided text? The special magic number for light-surplus mentioned"
+   },
+   "S3_1024_07": {
+    "score": 0.0,
+    "pred": ": f16287e4-e9c3-49e0-b602-f8ac10f1"
+   },
+   "S3_2048_07": {
+    "score": 0.0,
+    "pred": "the one that's most likely to be used in the future. It's the one that's most likely to be used in the future. It"
+   },
+   "S3_4096_07": {
+    "score": 0.0,
+    "pred": "the magic of the magic of the magic of the magic of the magic of the magic of the magic of the magic of the magic of the magic of the magic"
+   },
+   "S1_1024_08": {
+    "score": 1.0,
+    "pred": "7067228.\nThe special magic number for tangy-midnight mentioned in the provided text is 70672"
+   },
+   "S1_2048_08": {
+    "score": 1.0,
+    "pred": "4226067.\nThe special magic number for smoggy-caliber mentioned in the provided text is 4226"
+   },
+   "S1_4096_08": {
+    "score": 1.0,
+    "pred": "4823498.\nWhat is the special magic number for animated-porcupine mentioned in the provided text? The special magic number"
+   },
+   "S2_1024_08": {
+    "score": 1.0,
+    "pred": ": 7366205. The special magic number for oval-salon mentioned in the provided text is: 7366"
+   },
+   "S2_2048_08": {
+    "score": 0.0,
+    "pred": "468453.\nWhat is the special magic number for terrible-online mentioned in the provided text? The special magic number for terrible-"
+   },
+   "S2_4096_08": {
+    "score": 0.0,
+    "pred": "5. The special magic number for uncovered-turkey mentioned in the provided text is 1. The special magic number for uncovered-t"
+   },
+   "S3_1024_08": {
+    "score": 0.0,
+    "pred": ": 23bed01d-43cf-4fde-a493-3b83757750"
+   },
+   "S3_2048_08": {
+    "score": 0.0,
+    "pred": "that it's a special kind of magic that's used to make people feel better about themselves. It's a kind of magic that's used"
+   },
+   "S3_4096_08": {
+    "score": 0.0,
+    "pred": "the magic that makes it possible to cure a disease. The magic is a special magic that makes it possible to cure a disease. The magic is a special magic"
+   },
+   "S1_1024_09": {
+    "score": 1.0,
+    "pred": "2166941.\nThe special magic number for weak-jeweller mentioned in the provided text is 21669"
+   },
+   "S1_2048_09": {
+    "score": 1.0,
+    "pred": "4823498.\nThe special magic number for animated-porcupine mentioned in the given text is 48234"
+   },
+   "S1_4096_09": {
+    "score": 1.0,
+    "pred": "4905582.\nWhat is the special magic number for brainy-probe mentioned in the given text? The special magic number for"
+   },
+   "S2_1024_09": {
+    "score": 1.0,
+    "pred": ": 4684531.\nWhat is the special magic number for terrible-online mentioned in the provided text? The special magic number for"
+   },
+   "S2_2048_09": {
+    "score": 1.0,
+    "pred": ": 7730428. A lot of the change we're talking about is the same as the change we're talking about in"
+   },
+   "S2_4096_09": {
+    "score": 0.0,
+    "pred": "1.0. What is the special magic number for strong-hive mentioned in the provided text? The special magic number for strong-hive mentioned"
+   },
+   "S3_1024_09": {
+    "score": 0.0,
+    "pred": ": 95a76d79-bf3c-4c06-8343-08bc89fa6"
+   },
+   "S3_2048_09": {
+    "score": 0.0,
+    "pred": "that it's a special kind of magic that's used to help people with addictions. It's a special kind of magic that's used"
+   },
+   "S3_4096_09": {
+    "score": 0.0,
+    "pred": "the special magic of the app store. The app store is a place where you can buy and sell things. It's a place where you can buy and"
+   },
+   "S1_1024_10": {
+    "score": 1.0,
+    "pred": "4823498.\nThe grass is green. The sky is blue. The sun is yellow. Here we go. There and back"
+   },
+   "S1_2048_10": {
+    "score": 1.0,
+    "pred": "4905582.\nThe special magic number for brainy-probe mentioned in the given text is 490558"
+   },
+   "S1_4096_10": {
+    "score": 1.0,
+    "pred": "5663623.\nWhat is the special magic number for loving-cockroach mentioned in the provided text? The special magic number"
+   },
+   "S2_1024_10": {
+    "score": 1.0,
+    "pred": ": 7730428.\nWhat is the special magic number for husky-colonization mentioned in the provided text? The special magic"
+   },
+   "S2_2048_10": {
+    "score": 1.0,
+    "pred": "6279418. That's the number of times the founders have said they've been to the Internet. The number of"
+   },
+   "S2_4096_10": {
+    "score": 1.0,
+    "pred": "5107245.\nWhat is the special magic number for yellow-step-sister mentioned in the provided text? The special magic"
+   },
+   "S3_1024_10": {
+    "score": 0.0,
+    "pred": ": ff50bde4-3825-47b8-9cab-cc97663f1c"
+   },
+   "S3_2048_10": {
+    "score": 0.0,
+    "pred": "a special magic that's been around for a long time. It's a special magic that's been around for a long time. It's"
+   },
+   "S3_4096_10": {
+    "score": 0.0,
+    "pred": "the special magic of the App Store. The App Store is a huge business. It's a huge business. It's a huge business. It'"
+   },
+   "S1_1024_11": {
+    "score": 1.0,
+    "pred": "4905582.\nThe special magic number for brainy-probe mentioned in the given text is 490558"
+   },
+   "S1_2048_11": {
+    "score": 1.0,
+    "pred": "5663623.\nThe special magic number for loving-cockroach mentioned in the provided text is 56636"
+   },
+   "S1_4096_11": {
+    "score": 1.0,
+    "pred": "7120868.\nThe special magic number for telling-divorce mentioned in the given text is 71208"
+   },
+   "S2_1024_11": {
+    "score": 1.0,
+    "pred": ": 6279418. Alcohol is a dangerous drug, but I'd rather live in a world with wine than one without."
+   },
+   "S2_2048_11": {
+    "score": 1.0,
+    "pred": ": 8698256. That's why I don't have an iPhone, for example. [6] If I'm"
+   },
+   "S2_4096_11": {
+    "score": 0.0,
+    "pred": "1.0. The special magic number for oval-salon mentioned in the provided text is 1.0. The special magic number for o"
+   },
+   "S3_1024_11": {
+    "score": 0.0,
+    "pred": ": ae340454-cac5-468c-a8f4-9481a0a0"
+   },
+   "S3_2048_11": {
+    "score": 0.0,
+    "pred": ": ff50bde4-3825-47b8-9cab-cc97663f1c"
+   },
+   "S3_4096_11": {
+    "score": 0.0,
+    "pred": "the special magic of the app store. The app store is a place where you can buy and sell things. It's a place where you can buy and"
+   },
+   "S1_1024_12": {
+    "score": 1.0,
+    "pred": "5663623.\nThe special magic number for loving-cockroach mentioned in the provided text is 56636"
+   },
+   "S1_2048_12": {
+    "score": 1.0,
+    "pred": "7120868.\nThe special magic number for telling-divorce mentioned in the given text is 71208"
+   },
+   "S1_4096_12": {
+    "score": 0.0,
+    "pred": "666.\nThe special magic number for light-surplus mentioned in the provided text is 666.\nThe special magic number for"
+   },
+   "S2_1024_12": {
+    "score": 1.0,
+    "pred": ": 8698256. More things we like will mean more things we like too much.\nWhat is the special magic number for ther"
+   },
+   "S2_2048_12": {
+    "score": 1.0,
+    "pred": "5408072. It always will when I talk to a startup that's been operating for more than 8 or 9 months"
+   },
+   "S2_4096_12": {
+    "score": 0.0,
+    "pred": "46846.\nWhat is the special magic number for terrible-online mentioned in the provided text? The special magic number for terrible-online"
+   },
+   "S3_1024_12": {
+    "score": 0.0,
+    "pred": ": 988c24c9-61b1-4d22-a280-1c4510"
+   },
+   "S3_2048_12": {
+    "score": 0.0,
+    "pred": "that it's a special magic for deranged-assurance mentioned in the given text. The special magic for deranged-assurance mentioned in the given"
+   },
+   "S3_4096_12": {
+    "score": 0.0,
+    "pred": ": 984999999999999999999999999999"
+   },
+   "S1_1024_13": {
+    "score": 1.0,
+    "pred": "7120868.\nThe special magic number for telling-divorce mentioned in the given text is 71208"
+   },
+   "S1_2048_13": {
+    "score": 1.0,
+    "pred": "6960453.\nThe special magic number for light-surplus mentioned in the provided text is 696045"
+   },
+   "S1_4096_13": {
+    "score": 0.0,
+    "pred": "5479.\nThe special magic number for uncovered-turkey mentioned in the provided text is 5479.\nThe"
+   },
+   "S2_1024_13": {
+    "score": 1.0,
+    "pred": "5408072.\nThe special magic number for shiny-fleece mentioned in the provided text is 54080"
+   },
+   "S2_2048_13": {
+    "score": 1.0,
+    "pred": "3320821.\nWhat is the special magic number for a person who has a 100% chance of being a million"
+   },
+   "S2_4096_13": {
+    "score": 0.0,
+    "pred": "1. The special magic number for husky colonization mentioned in the provided text is 2. The special magic number for husky colonization mentioned in"
+   },
+   "S3_1024_13": {
+    "score": 1.0,
+    "pred": ": dc5c0eed-8da0-465b-b898-97b9405cacec."
+   },
+   "S3_2048_13": {
+    "score": 0.0,
+    "pred": ": 988c24c9-61b1-4d22-a280-90f8c0"
+   },
+   "S3_4096_13": {
+    "score": 0.0,
+    "pred": "the special magic of rhetorical-industry. The special magic of rhetorical-industry is the special magic of rhetorical-industry"
+   },
+   "S1_1024_14": {
+    "score": 1.0,
+    "pred": "6960453.\nThe special magic number for light-surplus mentioned in the given text is 696045"
+   },
+   "S1_2048_14": {
+    "score": 1.0,
+    "pred": "5479144.\nThe special magic number for uncovered-turkey mentioned in the provided text is 5479"
+   },
+   "S1_4096_14": {
+    "score": 1.0,
+    "pred": "3871230.\nThe special magic number for strong-hive mentioned in the given text is 387123"
+   },
+   "S2_1024_14": {
+    "score": 1.0,
+    "pred": ": 3320821.\nWhat is the special magic number for fat-dolman mentioned in the provided text? The special magic"
+   },
+   "S2_2048_14": {
+    "score": 0.0,
+    "pred": "1.\nWhat is the special magic number for coherent-oyster mentioned in the provided text? The special magic number for coherent-oyster"
+   },
+   "S2_4096_14": {
+    "score": 0.0,
+    "pred": "1.\nWhat is the special magic number for berserk-suitcase mentioned in the provided text? The special magic number for berserk-"
+   },
+   "S3_1024_14": {
+    "score": 0.0,
+    "pred": ": e2817efd-ae84-4217-9d53-434bb88139"
+   },
+   "S3_2048_14": {
+    "score": 0.0,
+    "pred": "the special magic of rhetoric. The special magic of rhetoric is the special magic of rhetorical-industry. The special magic of rhetorical"
+   },
+   "S3_4096_14": {
+    "score": 0.0,
+    "pred": "the special magic of the App Store. The App Store is a huge business. It's a huge business. It's a huge business. It'"
+   },
+   "S1_1024_15": {
+    "score": 1.0,
+    "pred": "5479144.\nThe special magic number for uncovered-turkey mentioned in the provided text is 5479"
+   },
+   "S1_2048_15": {
+    "score": 1.0,
+    "pred": "3871230.\nThe special magic number for strong-hive mentioned in the provided text is 387123"
+   },
+   "S1_4096_15": {
+    "score": 1.0,
+    "pred": "5107245.\nThe special magic number for yellow-step-sister mentioned in the provided text is 5107"
+   },
+   "S2_1024_15": {
+    "score": 1.0,
+    "pred": "3564251.\nThe special magic number for coherent-oyster mentioned in the provided text is 35642"
+   },
+   "S2_2048_15": {
+    "score": 1.0,
+    "pred": "8082668.\nWhat is the special magic number for used-postfix mentioned in the provided text? The special magic number for"
+   },
+   "S2_4096_15": {
+    "score": 1.0,
+    "pred": "9375710. The special magic number for towering-pun mentioned in the provided text is 937571"
+   },
+   "S3_1024_15": {
+    "score": 0.0,
+    "pred": ": 1c8eaee9-5715-4d6f-a416-1293c4c2"
+   },
+   "S3_2048_15": {
+    "score": 0.0,
+    "pred": ": 1. 2. 3. 4. 5. 6. 7. 8. 9. 10."
+   },
+   "S3_4096_15": {
+    "score": 0.0,
+    "pred": "the special magic of the App Store. The App Store is a huge, huge, huge, huge, huge, huge, huge, huge, huge, huge"
+   },
+   "S1_1024_16": {
+    "score": 1.0,
+    "pred": "3871230.\nThe grass is green. The sky is blue. The sun is yellow. Here we go. There and back"
+   },
+   "S1_2048_16": {
+    "score": 1.0,
+    "pred": "5107245.\nThe special magic number for yellow-step-sister mentioned in the provided text is 5107"
+   },
+   "S1_4096_16": {
+    "score": 1.0,
+    "pred": "7366205.\nThe special magic number for oval-salon mentioned in the provided text is 73662"
+   },
+   "S2_1024_16": {
+    "score": 1.0,
+    "pred": ": 8082668.\nWhat is the special magic number for used-postfix mentioned in the provided text? The special magic number"
+   },
+   "S2_2048_16": {
+    "score": 1.0,
+    "pred": "8852574. I'm not sure if this is a real number or a mathematical formula. I'm not sure if it"
+   },
+   "S2_4096_16": {
+    "score": 1.0,
+    "pred": ": 3342608. The special magic number for bad-pancreas mentioned in the provided text is: 334"
+   },
+   "S3_1024_16": {
+    "score": 0.0,
+    "pred": ": e9a1fa6f-81f7-4d1c-adbc-2134c30ff46"
+   },
+   "S3_2048_16": {
+    "score": 0.0,
+    "pred": "the special magic of the Internet. The special magic of the Internet is the special magic of the Internet. The special magic of the Internet is the special magic of"
+   },
+   "S3_4096_16": {
+    "score": 0.0,
+    "pred": "the magic of the nondescript-rotation. The magic of the nondescript-rotation is the magic of the nondescript-rotation"
+   },
+   "S1_1024_17": {
+    "score": 1.0,
+    "pred": "8755439.\nThe grass is green. The sky is blue. The sun is yellow. Here we go. There and back"
+   },
+   "S1_2048_17": {
+    "score": 1.0,
+    "pred": "7366205.\nThe special magic number for oval-salon mentioned in the given text is 73662"
+   },
+   "S1_4096_17": {
+    "score": 1.0,
+    "pred": "4684531.\nWhat is the special magic number for terrible-online mentioned in the given text? The special magic number for terrible"
+   },
+   "S2_1024_17": {
+    "score": 1.0,
+    "pred": ": 8852574.\nWhat is the special magic number for squealing-atom mentioned in the provided text? The special magic number"
+   },
+   "S2_2048_17": {
+    "score": 1.0,
+    "pred": "5476583.\nWhat is the special magic number for utter-contrast mentioned in the provided text? The special magic number for"
+   },
+   "S2_4096_17": {
+    "score": 1.0,
+    "pred": ": 5408072.\nWhat is the special magic number for shiny-fleece mentioned in the provided text? The special magic"
+   },
+   "S3_1024_17": {
+    "score": 0.0,
+    "pred": ": 295b4715-c333-4861-9fb8-d16c272"
+   },
+   "S3_2048_17": {
+    "score": 0.0,
+    "pred": ": f42d47cc-00d4-4f59-b427-3ca3287d0"
+   },
+   "S3_4096_17": {
+    "score": 0.0,
+    "pred": ": \"The App Store approval process is broken.\" The app store approval process is broken. The App Store approval process is broken. The App Store approval process is"
+   },
+   "S1_1024_18": {
+    "score": 1.0,
+    "pred": "4684531.\nThe grass is green. The sky is blue. The sun is yellow. Here we go. There and back"
+   },
+   "S1_2048_18": {
+    "score": 1.0,
+    "pred": "4684531.\nThe grass is green. The sky is blue. The sun is yellow. Here we go. There and back"
+   },
+   "S1_4096_18": {
+    "score": 1.0,
+    "pred": "4842788.\nWhat is the special magic number for auspicious-compliance mentioned in the given text? The special"
+   },
+   "S2_1024_18": {
+    "score": 1.0,
+    "pred": "5476583.\nThe special magic number for utter-contrast mentioned in the provided text is 547658"
+   },
+   "S2_2048_18": {
+    "score": 1.0,
+    "pred": ": 8612220.\nWhat is the special magic number for different-oyster mentioned in the provided text? The special magic number"
+   },
+   "S2_4096_18": {
+    "score": 1.0,
+    "pred": ": 7700828. The App Store is an ongoing karma leak. * * *How did Apple get into this mess? Their"
+   },
+   "S3_1024_18": {
+    "score": 0.0,
+    "pred": ": 52fbe43b-9954-4eb4-8025-7ad1eb2263"
+   },
+   "S3_2048_18": {
+    "score": 0.0,
+    "pred": ": 1. The special magic of the Internet is that it allows people to do things they wouldn't otherwise do. 2. The special magic of"
+   },
+   "S3_4096_18": {
+    "score": 0.0,
+    "pred": ": 81f631d4-a392-41a7-9777-a4774c"
+   },
+   "S1_1024_19": {
+    "score": 1.0,
+    "pred": "4842788.\nThe special magic number for auspicious-compliance mentioned in the provided text is 484"
+   },
+   "S1_2048_19": {
+    "score": 1.0,
+    "pred": "4842788.\nThe special magic number for auspicious-compliance mentioned in the given text is 484"
+   },
+   "S1_4096_19": {
+    "score": 1.0,
+    "pred": "7730428.\nThe special magic number for husky-colonization mentioned in the provided text is 77304"
+   },
+   "S2_1024_19": {
+    "score": 1.0,
+    "pred": "8612220.\nWhat is the special magic number for different-oyster mentioned in the provided text? The special magic number for"
+   },
+   "S2_2048_19": {
+    "score": 1.0,
+    "pred": ": 9517485. \nWhat is the special magic number for eager-waveform mentioned in the provided text? The special magic"
+   },
+   "S2_4096_19": {
+    "score": 1.0,
+    "pred": ": 3320821. \nWhat is the special magic number for fat-dolman mentioned in the provided text? The special"
+   },
+   "S3_1024_19": {
+    "score": 1.0,
+    "pred": ": e0f3eab0-5cec-4eb5-add9-68311ca35cfb."
+   },
+   "S3_2048_19": {
+    "score": 0.0,
+    "pred": ": 295b4715-c333-4861-9fb8-d16c272"
+   },
+   "S3_4096_19": {
+    "score": 0.0,
+    "pred": ": 52fbe43b-9954-4eb4-8025-7ad1eb2263"
+   }
+  },
+  "cpu": {
+   "S1_1024_00": {
+    "score": 1.0,
+    "pred": "8536477.\nThe special magic number for faulty-pimple is 8536477."
+   },
+   "S1_2048_00": {
+    "score": 1.0,
+    "pred": "8090293.\nThe special magic number for diligent-joke is 8090293.\nThe"
+   },
+   "S1_4096_00": {
+    "score": 0.0,
+    "pred": "12.\nThe special magic number for guarded-program mentioned in the provided text is 12.\nThe special magic number for guarded"
+   },
+   "S2_1024_00": {
+    "score": 1.0,
+    "pred": "2622631.\nThe special magic number for lovely-tritone mentioned in the provided text is 26226"
+   },
+   "S2_2048_00": {
+    "score": 1.0,
+    "pred": "8707870. July 2010What is the special magic number for yielding-notoriety mentioned in the provided"
+   },
+   "S2_4096_00": {
+    "score": 0.0,
+    "pred": "1.0. What is the special magic number for yielding-notoriety mentioned in the provided text? The special magic number for yielding-"
+   },
+   "S3_1024_00": {
+    "score": 0.0,
+    "pred": ": e2acf72f-9e57-4f7a-a0ee-89aed453dd3"
+   },
+   "S3_2048_00": {
+    "score": 0.0,
+    "pred": "the one that I've been using for the last 4 or 5 months. It's the one I've been using for the last"
+   },
+   "S3_4096_00": {
+    "score": 0.0,
+    "pred": "the magic of the magic of the magic of the magic of the magic of the magic of the magic of the magic of the magic of the magic of the magic"
+   },
+   "S1_1024_01": {
+    "score": 1.0,
+    "pred": "3678638.\nThe special magic number for abject-apron mentioned in the provided text is 36786"
+   },
+   "S1_2048_01": {
+    "score": 1.0,
+    "pred": "3608513.\nThe special magic number for guarded-program mentioned in the given text is 360851"
+   },
+   "S1_4096_01": {
+    "score": 0.0,
+    "pred": "12.\nWhat is the special magic number for instinctive-facsimile mentioned in the provided text? The special magic number for instinctive-"
+   },
+   "S2_1024_01": {
+    "score": 1.0,
+    "pred": ": 8707870. Most if not all the things we describe as addictive are. And the scary thing is, the process"
+   },
+   "S2_2048_01": {
+    "score": 0.0,
+    "pred": "1.\nWhat is the special magic number for scintillating-slipper mentioned in the provided text? The special magic number for scintill"
+   },
+   "S2_4096_01": {
+    "score": 0.0,
+    "pred": "1.00000000000000000000000000000"
+   },
+   "S3_1024_01": {
+    "score": 0.0,
+    "pred": ": 3b982ef8-daf6-4a26-946d-3f31fc377"
+   },
+   "S3_2048_01": {
+    "score": 0.0,
+    "pred": "that it's a strange thing to do. It's a strange thing to do when you're trying to live well. It's a strange"
+   },
+   "S3_4096_01": {
+    "score": 0.0,
+    "pred": "the special magic of the App Store. The App Store is a huge, huge, huge, huge, huge, huge, huge, huge, huge, huge"
+   },
+   "S1_1024_02": {
+    "score": 1.0,
+    "pred": "5661907.\nThe grass is green. The sky is blue. The sun is yellow. The sun is yellow. Here we"
+   },
+   "S1_2048_02": {
+    "score": 1.0,
+    "pred": "2714803.\nThe special magic number for instinctive-facsimile mentioned in the provided text is 2714"
+   },
+   "S1_4096_02": {
+    "score": 0.0,
+    "pred": "11.\nWhat is the special magic number for lovely-tritone mentioned in the provided text? The special magic number for lovely-trit"
+   },
+   "S2_1024_02": {
+    "score": 1.0,
+    "pred": ": 5918715. It's the same process that cures diseases: technological progress means making things do more of what we want"
+   },
+   "S2_2048_02": {
+    "score": 1.0,
+    "pred": ": 4823498.\n[1] \"The Internet is the most powerful tool ever invented,\" says the late computer scientist Alan T"
+   },
+   "S2_4096_02": {
+    "score": 0.0,
+    "pred": "1.0. The special magic number for late-embellishment mentioned in the provided text is 0.0. The special magic number for late"
+   },
+   "S3_1024_02": {
+    "score": 0.0,
+    "pred": ": d58842de-a2bc-472f-b412-b29347294"
+   },
+   "S3_2048_02": {
+    "score": 0.0,
+    "pred": "the one that's most likely to be used by the people who are most likely to be affected by the new technology. The special magicUE for discreet"
+   },
+   "S3_4096_02": {
+    "score": 0.0,
+    "pred": "the magic of the \"fork\" in the chain of events that leads to the creation of a new product. The special magic of the \"fork\""
+   },
+   "S1_1024_03": {
+    "score": 1.0,
+    "pred": "6647119.\nThe special magic number for fanatical-evidence is 6647119."
+   },
+   "S1_2048_03": {
+    "score": 1.0,
+    "pred": "2622631.\nThe special magic number for lovely-tritone mentioned in the provided text is 26226"
+   },
+   "S1_4096_03": {
+    "score": 0.0,
+    "pred": "12.\nWhat is the special magic number for jittery-hospital mentioned in the provided text? The special magic number for jittery"
+   },
+   "S2_1024_03": {
+    "score": 1.0,
+    "pred": ": 4823498.\nWhat is the special magic number for animated-porcupine mentioned in the provided text? The special magic"
+   },
+   "S2_2048_03": {
+    "score": 1.0,
+    "pred": "4905582. That usage is the same as the one for the 1990s. The special magic number for brain"
+   },
+   "S2_4096_03": {
+    "score": 0.0,
+    "pred": "1.00000000000000000000000000000"
+   },
+   "S3_1024_03": {
+    "score": 0.0,
+    "pred": ": ab9099a4-35a2-40ae-9af3-05535ec42e0"
+   },
+   "S3_2048_03": {
+    "score": 0.0,
+    "pred": "the one I've been using for the last 20 years. It's a special magic that's been around for 20 years."
+   },
+   "S3_4096_03": {
+    "score": 0.0,
+    "pred": "the special magic of the app store. The app store is a place where you can buy and sell things. It's a place where you can buy and"
+   },
+   "S1_1024_04": {
+    "score": 1.0,
+    "pred": "7374122.\nThe special magic number for capable-radiosonde mentioned in the provided text is 73741"
+   },
+   "S1_2048_04": {
+    "score": 1.0,
+    "pred": "5437923.\nThe special magic number for jittery-hospital is 5437923."
+   },
+   "S1_4096_04": {
+    "score": 0.0,
+    "pred": "1000000000000000000000000000000"
+   },
+   "S2_1024_04": {
+    "score": 1.0,
+    "pred": "4905582.\nThe special magic number for brainy-probe mentioned in the provided text is 490558"
+   },
+   "S2_2048_04": {
+    "score": 0.0,
+    "pred": "7110868. Checkers and solids, which are both more addictive than hiking, are both more addictive"
+   },
+   "S2_4096_04": {
+    "score": 0.0,
+    "pred": "1.0. The special magic number for brainy-probe mentioned in the provided text is 0.0. The special magic number for brainy"
+   },
+   "S3_1024_04": {
+    "score": 1.0,
+    "pred": ": 3eabedcb-baa8-4dd4-88bd-64072bcfbe01. When"
+   },
+   "S3_2048_04": {
+    "score": 0.0,
+    "pred": "that it's the same process that creates addictive new things we like. The special magicUE for teeny-tiny-kingdom mentioned in the"
+   },
+   "S3_4096_04": {
+    "score": 0.0,
+    "pred": "the special magic of the oval-salon. The special magic of the oval-salon is the special magic of the oval-salon"
+   },
+   "S1_1024_05": {
+    "score": 1.0,
+    "pred": "6770619.\nThe special magic number for lamentable-alcohol is 6770619."
+   },
+   "S1_2048_05": {
+    "score": 1.0,
+    "pred": "8707870.\nThe special magic number for yielding-notoriety mentioned in the provided text is 8707"
+   },
+   "S1_4096_05": {
+    "score": 0.0,
+    "pred": "12.\nWhat is the special magic number for crooked-grandmom mentioned in the provided text? The special magic number for crooked-"
+   },
+   "S2_1024_05": {
+    "score": 1.0,
+    "pred": ": 7120868. [1]No one doubts this process is accelerating, which means increasing numbers of things we like will be"
+   },
+   "S2_2048_05": {
+    "score": 0.0,
+    "pred": "6.\nWhat is the special magic number for the number of people who want to be free of addiction? The special magic number for the number of people"
+   },
+   "S2_4096_05": {
+    "score": 0.0,
+    "pred": "1.0. The special magic number for loving-cockroach mentioned in the provided text is 2.0. The special magic number for loving"
+   },
+   "S3_1024_05": {
+    "score": 1.0,
+    "pred": ": ece66fa2-fd51-46e6-851b-4cf36123fdf7"
+   },
+   "S3_2048_05": {
+    "score": 0.0,
+    "pred": "the one that's most likely to be used by people who want to live in a world where they can't afford to eat meat. The special magic"
+   },
+   "S3_4096_05": {
+    "score": 0.0,
+    "pred": "the special magic of the app store. The app store is a place where you can buy and sell apps. The app store is a place where you can buy"
+   },
+   "S1_1024_06": {
+    "score": 1.0,
+    "pred": "8707870.\nThe special magic number for amused-resource mentioned in the provided text is 870787"
+   },
+   "S1_2048_06": {
+    "score": 1.0,
+    "pred": "7350753.\nThe special magic number for crooked-grandmom mentioned in the provided text is 7350"
+   },
+   "S1_4096_06": {
+    "score": 0.0,
+    "pred": "12.\nWhat is the special magic number for scintillating-slipper mentioned in the provided text? The special magic number for scint"
+   },
+   "S2_1024_06": {
+    "score": 1.0,
+    "pred": ": 6960453. The closest is the colloquial sense of \"addictive.\" That usage has become increasingly common during"
+   },
+   "S2_2048_06": {
+    "score": 1.0,
+    "pred": ": 3871230. One of the special magic numbers for strong-hive mentioned in the provided text is: 387"
+   },
+   "S2_4096_06": {
+    "score": 0.0,
+    "pred": "1.0. The special magic number for telling-divorce mentioned in the provided text is 2.0. The special magic number for telling"
+   },
+   "S3_1024_06": {
+    "score": 0.0,
+    "pred": ": c4b032cc-d7c5-44a5-9304-317faf42e"
+   },
+   "S3_2048_06": {
+    "score": 0.0,
+    "pred": "the one that's most likely to be used by people who want to live or die. It's the one that's most likely to be used"
+   },
+   "S3_4096_06": {
+    "score": 0.0,
+    "pred": "the special magic of the flaky-endoderm. The special magic of the flaky-endoderm is the special magic of the flaky-"
+   },
+   "S1_1024_07": {
+    "score": 1.0,
+    "pred": "2322047.\nThe special magic number for loutish-copper is 2322047."
+   },
+   "S1_2048_07": {
+    "score": 1.0,
+    "pred": "5918715.\nThe special magic number for scintillating-slipper is 5918715."
+   },
+   "S1_4096_07": {
+    "score": 1.0,
+    "pred": "4226067.\nWhat is the special magic number for smoggy-caliber mentioned in the provided text? The special magic"
+   },
+   "S2_1024_07": {
+    "score": 1.0,
+    "pred": ": 3871230.\nWhat is the special magic number for strong-hive mentioned in the provided text? The special magic number"
+   },
+   "S2_2048_07": {
+    "score": 1.0,
+    "pred": "7366205.\nWhat is the special magic number for hiking? The special magic number for hiking mentioned in the provided text"
+   },
+   "S2_4096_07": {
+    "score": 0.0,
+    "pred": "1.0. The special magic number for light-surplus mentioned in the provided text is 1.0. The special magic number for light-"
+   },
+   "S3_1024_07": {
+    "score": 0.0,
+    "pred": ": f16287e4-e9c3-49e0-b602-f8ac10f1"
+   },
+   "S3_2048_07": {
+    "score": 0.0,
+    "pred": "the one that's most likely to be used in the future. It's the one that's most likely to be used in the future. It"
+   },
+   "S3_4096_07": {
+    "score": 0.0,
+    "pred": "the magic of the magic of the magic of the magic of the magic of the magic of the magic of the magic of the magic of the magic of the magic"
+   },
+   "S1_1024_08": {
+    "score": 1.0,
+    "pred": "7067228.\nThe special magic number for tangy-midnight mentioned in the provided text is 70672"
+   },
+   "S1_2048_08": {
+    "score": 1.0,
+    "pred": "4226067.\nThe special magic number for smoggy-caliber mentioned in the provided text is 4226"
+   },
+   "S1_4096_08": {
+    "score": 1.0,
+    "pred": "4823498.\nWhat is the special magic number for animated-porcupine mentioned in the provided text? The special magic number"
+   },
+   "S2_1024_08": {
+    "score": 1.0,
+    "pred": ": 7366205. The special magic number for oval-salon mentioned in the provided text is: 7366"
+   },
+   "S2_2048_08": {
+    "score": 0.0,
+    "pred": "468453.\nWhat is the special magic number for terrible-online mentioned in the provided text? The special magic number for terrible-"
+   },
+   "S2_4096_08": {
+    "score": 0.0,
+    "pred": "5. The special magic number for uncovered-turkey mentioned in the provided text is 1. The special magic number for uncovered-t"
+   },
+   "S3_1024_08": {
+    "score": 0.0,
+    "pred": ": 23bed01d-43cf-4fde-a493-3b83757750"
+   },
+   "S3_2048_08": {
+    "score": 0.0,
+    "pred": "that it's a special kind of magic that's used to make people feel better about themselves. It's a kind of magic that's used"
+   },
+   "S3_4096_08": {
+    "score": 0.0,
+    "pred": "the magic that makes it possible to cure a disease. The magic is a special magic that makes it possible to cure a disease. The magic is a special magic"
+   },
+   "S1_1024_09": {
+    "score": 1.0,
+    "pred": "2166941.\nThe special magic number for weak-jeweller mentioned in the provided text is 21669"
+   },
+   "S1_2048_09": {
+    "score": 1.0,
+    "pred": "4823498.\nThe special magic number for animated-porcupine mentioned in the given text is 48234"
+   },
+   "S1_4096_09": {
+    "score": 1.0,
+    "pred": "4905582.\nWhat is the special magic number for brainy-probe mentioned in the given text? The special magic number for"
+   },
+   "S2_1024_09": {
+    "score": 1.0,
+    "pred": ": 4684531.\nWhat is the special magic number for terrible-online mentioned in the provided text? The special magic number for"
+   },
+   "S2_2048_09": {
+    "score": 1.0,
+    "pred": ": 7730428. A lot of the change we're talking about is the same as the change we're talking about in"
+   },
+   "S2_4096_09": {
+    "score": 0.0,
+    "pred": "1.0. What is the special magic number for strong-hive mentioned in the provided text? The special magic number for strong-hive mentioned"
+   },
+   "S3_1024_09": {
+    "score": 0.0,
+    "pred": ": 95a76d79-bf3c-4c06-8343-08bc89fa6"
+   },
+   "S3_2048_09": {
+    "score": 0.0,
+    "pred": "that it's a special kind of magic that's used to help people with addictions. It's a special kind of magic that's used"
+   },
+   "S3_4096_09": {
+    "score": 0.0,
+    "pred": "the special magic of the app store. The app store is a place where you can buy and sell things. It's a place where you can buy and"
+   },
+   "S1_1024_10": {
+    "score": 1.0,
+    "pred": "4823498.\nThe grass is green. The sky is blue. The sun is yellow. Here we go. There and back"
+   },
+   "S1_2048_10": {
+    "score": 1.0,
+    "pred": "4905582.\nThe special magic number for brainy-probe mentioned in the given text is 490558"
+   },
+   "S1_4096_10": {
+    "score": 1.0,
+    "pred": "5663623.\nWhat is the special magic number for loving-cockroach mentioned in the provided text? The special magic number"
+   },
+   "S2_1024_10": {
+    "score": 1.0,
+    "pred": ": 7730428.\nWhat is the special magic number for husky-colonization mentioned in the provided text? The special magic"
+   },
+   "S2_2048_10": {
+    "score": 1.0,
+    "pred": "6279418. That's the number of times the founders have said they've been to the Internet. The number of"
+   },
+   "S2_4096_10": {
+    "score": 1.0,
+    "pred": "5107245. What is the special magic number for the number of people who die in a year? The special magic number for the"
+   },
+   "S3_1024_10": {
+    "score": 0.0,
+    "pred": ": ff50bde4-3825-47b8-9cab-cc97663f1c"
+   },
+   "S3_2048_10": {
+    "score": 0.0,
+    "pred": "a special magic that's been around for a long time. It's a special magic that's been around for a long time. It's"
+   },
+   "S3_4096_10": {
+    "score": 0.0,
+    "pred": "the special magic of the App Store. The App Store is a huge business. It's a huge business. It's a huge business. It'"
+   },
+   "S1_1024_11": {
+    "score": 1.0,
+    "pred": "4905582.\nThe special magic number for brainy-probe mentioned in the given text is 490558"
+   },
+   "S1_2048_11": {
+    "score": 1.0,
+    "pred": "5663623.\nThe special magic number for loving-cockroach mentioned in the provided text is 56636"
+   },
+   "S1_4096_11": {
+    "score": 1.0,
+    "pred": "7120868.\nThe special magic number for telling-divorce mentioned in the given text is 71208"
+   },
+   "S2_1024_11": {
+    "score": 1.0,
+    "pred": ": 6279418. Alcohol is a dangerous drug, but I'd rather live in a world with wine than one without."
+   },
+   "S2_2048_11": {
+    "score": 1.0,
+    "pred": ": 8698256. That's why I don't have an iPhone, for example. [6] If I'm"
+   },
+   "S2_4096_11": {
+    "score": 0.0,
+    "pred": "1.0. The special magic number for oval-salon mentioned in the provided text is 1.0. The special magic number for o"
+   },
+   "S3_1024_11": {
+    "score": 0.0,
+    "pred": ": ae340454-cac5-468c-a8f4-9481a0a0"
+   },
+   "S3_2048_11": {
+    "score": 0.0,
+    "pred": ": ff50bde4-3825-47b8-9cab-cc97663f1c"
+   },
+   "S3_4096_11": {
+    "score": 0.0,
+    "pred": "the special magic of the app store. The app store is a place where you can buy and sell things. It's a place where you can buy and"
+   },
+   "S1_1024_12": {
+    "score": 1.0,
+    "pred": "5663623.\nThe special magic number for loving-cockroach mentioned in the provided text is 56636"
+   },
+   "S1_2048_12": {
+    "score": 1.0,
+    "pred": "7120868.\nThe special magic number for telling-divorce mentioned in the given text is 71208"
+   },
+   "S1_4096_12": {
+    "score": 0.0,
+    "pred": "666.\nThe special magic number for light-surplus mentioned in the provided text is 666.\nThe special magic number for"
+   },
+   "S2_1024_12": {
+    "score": 1.0,
+    "pred": ": 8698256. More things we like will mean more things we like too much.\nWhat is the special magic number for ther"
+   },
+   "S2_2048_12": {
+    "score": 1.0,
+    "pred": "5408072. It always will when I talk to a startup that's been operating for more than 8 or 9 months"
+   },
+   "S2_4096_12": {
+    "score": 0.0,
+    "pred": "46846.\nWhat is the special magic number for terrible-online mentioned in the provided text? The special magic number for terrible-online"
+   },
+   "S3_1024_12": {
+    "score": 0.0,
+    "pred": ": 988c24c9-61b1-4d22-a280-1c4510"
+   },
+   "S3_2048_12": {
+    "score": 0.0,
+    "pred": "that it's a special magic for deranged-assurance mentioned in the given text. The special magic for deranged-assurance mentioned in the given"
+   },
+   "S3_4096_12": {
+    "score": 0.0,
+    "pred": ": 984999999999999999999999999999"
+   },
+   "S1_1024_13": {
+    "score": 1.0,
+    "pred": "7120868.\nThe special magic number for telling-divorce mentioned in the given text is 71208"
+   },
+   "S1_2048_13": {
+    "score": 1.0,
+    "pred": "6960453.\nThe special magic number for light-surplus mentioned in the provided text is 696045"
+   },
+   "S1_4096_13": {
+    "score": 0.0,
+    "pred": "5479.\nThe special magic number for uncovered-turkey mentioned in the provided text is 5479.\nThe"
+   },
+   "S2_1024_13": {
+    "score": 1.0,
+    "pred": "5408072.\nThe special magic number for shiny-fleece mentioned in the provided text is 54080"
+   },
+   "S2_2048_13": {
+    "score": 1.0,
+    "pred": "3320821.\nWhat is the special magic number for a person who has a 100% chance of being a million"
+   },
+   "S2_4096_13": {
+    "score": 0.0,
+    "pred": "1. The special magic number for husky colonization mentioned in the provided text is 2. The special magic number for husky colonization mentioned in"
+   },
+   "S3_1024_13": {
+    "score": 1.0,
+    "pred": ": dc5c0eed-8da0-465b-b898-97b9405cacec."
+   },
+   "S3_2048_13": {
+    "score": 0.0,
+    "pred": ": 988c24c9-61b1-4d22-a280-90f8c0"
+   },
+   "S3_4096_13": {
+    "score": 0.0,
+    "pred": "the special magic of rhetorical-industry. The special magic of rhetorical-industry is the special magic of rhetorical-industry"
+   },
+   "S1_1024_14": {
+    "score": 1.0,
+    "pred": "6960453.\nThe special magic number for light-surplus mentioned in the given text is 696045"
+   },
+   "S1_2048_14": {
+    "score": 1.0,
+    "pred": "5479144.\nThe special magic number for uncovered-turkey mentioned in the provided text is 5479"
+   },
+   "S1_4096_14": {
+    "score": 1.0,
+    "pred": "3871230.\nThe special magic number for strong-hive mentioned in the given text is 387123"
+   },
+   "S2_1024_14": {
+    "score": 1.0,
+    "pred": ": 3320821.\nWhat is the special magic number for fat-dolman mentioned in the provided text? The special magic"
+   },
+   "S2_2048_14": {
+    "score": 0.0,
+    "pred": "1.\nWhat is the special magic number for coherent-oyster mentioned in the provided text? The special magic number for coherent-oyster"
+   },
+   "S2_4096_14": {
+    "score": 0.0,
+    "pred": "1.\nWhat is the special magic number for berserk-suitcase mentioned in the provided text? The special magic number for berserk-"
+   },
+   "S3_1024_14": {
+    "score": 0.0,
+    "pred": ": e2817efd-ae84-4217-9d53-434bb88139"
+   },
+   "S3_2048_14": {
+    "score": 0.0,
+    "pred": "the special magic of rhetoric. The special magic of rhetoric is the special magic of rhetorical-industry. The special magic of rhetorical"
+   },
+   "S3_4096_14": {
+    "score": 0.0,
+    "pred": "the special magic of the App Store. The App Store is a huge business. It's a huge business. It's a huge business. It'"
+   },
+   "S1_1024_15": {
+    "score": 1.0,
+    "pred": "5479144.\nThe special magic number for uncovered-turkey mentioned in the provided text is 5479"
+   },
+   "S1_2048_15": {
+    "score": 1.0,
+    "pred": "3871230.\nThe special magic number for strong-hive mentioned in the provided text is 387123"
+   },
+   "S1_4096_15": {
+    "score": 1.0,
+    "pred": "5107245.\nThe special magic number for yellow-step-sister mentioned in the provided text is 5107"
+   },
+   "S2_1024_15": {
+    "score": 1.0,
+    "pred": "3564251.\nThe special magic number for coherent-oyster mentioned in the provided text is 35642"
+   },
+   "S2_2048_15": {
+    "score": 1.0,
+    "pred": "8082668.\nWhat is the special magic number for used-postfix mentioned in the provided text? The special magic number for"
+   },
+   "S2_4096_15": {
+    "score": 1.0,
+    "pred": "9375710. The special magic number for towering-pun mentioned in the provided text is 937571"
+   },
+   "S3_1024_15": {
+    "score": 0.0,
+    "pred": ": 1c8eaee9-5715-4d6f-a416-1293c4c2"
+   },
+   "S3_2048_15": {
+    "score": 0.0,
+    "pred": ": 1. 2. 3. 4. 5. 6. 7. 8. 9. 10."
+   },
+   "S3_4096_15": {
+    "score": 0.0,
+    "pred": "the special magic of the App Store. The App Store is a huge, huge, huge, huge, huge, huge, huge, huge, huge, huge"
+   },
+   "S1_1024_16": {
+    "score": 1.0,
+    "pred": "3871230.\nThe grass is green. The sky is blue. The sun is yellow. Here we go. There and back"
+   },
+   "S1_2048_16": {
+    "score": 1.0,
+    "pred": "5107245.\nThe special magic number for yellow-step-sister mentioned in the provided text is 5107"
+   },
+   "S1_4096_16": {
+    "score": 1.0,
+    "pred": "7366205.\nThe special magic number for oval-salon mentioned in the provided text is 73662"
+   },
+   "S2_1024_16": {
+    "score": 1.0,
+    "pred": ": 8082668.\nWhat is the special magic number for used-postfix mentioned in the provided text? The special magic number"
+   },
+   "S2_2048_16": {
+    "score": 1.0,
+    "pred": "8852574. I'm not sure if this is a real number or a mathematical formula. I'm not sure if it"
+   },
+   "S2_4096_16": {
+    "score": 1.0,
+    "pred": ": 3342608. The special magic number for bad-pancreas mentioned in the provided text is: 334"
+   },
+   "S3_1024_16": {
+    "score": 0.0,
+    "pred": ": e9a1fa6f-81f7-4d1c-adbc-2134c30ff46"
+   },
+   "S3_2048_16": {
+    "score": 0.0,
+    "pred": "the special magic of the Internet. The special magic of the Internet is the special magic of the Internet. The special magic of the Internet is the special magic of"
+   },
+   "S3_4096_16": {
+    "score": 0.0,
+    "pred": "the magic of the nondescript-rotation. The magic of the nondescript-rotation is the magic of the nondescript-rotation"
+   },
+   "S1_1024_17": {
+    "score": 1.0,
+    "pred": "8755439.\nThe grass is green. The sky is blue. The sun is yellow. Here we go. There and back"
+   },
+   "S1_2048_17": {
+    "score": 1.0,
+    "pred": "7366205.\nThe special magic number for oval-salon mentioned in the given text is 73662"
+   },
+   "S1_4096_17": {
+    "score": 1.0,
+    "pred": "4684531.\nWhat is the special magic number for terrible-online mentioned in the given text? The special magic number for terrible"
+   },
+   "S2_1024_17": {
+    "score": 1.0,
+    "pred": ": 8852574.\nWhat is the special magic number for squealing-atom mentioned in the provided text? The special magic number"
+   },
+   "S2_2048_17": {
+    "score": 1.0,
+    "pred": "5476583.\nWhat is the special magic number for utter-contrast mentioned in the provided text? The special magic number for"
+   },
+   "S2_4096_17": {
+    "score": 1.0,
+    "pred": ": 5408072.\nWhat is the special magic number for shiny-fleece mentioned in the provided text? The special magic"
+   },
+   "S3_1024_17": {
+    "score": 0.0,
+    "pred": ": 295b4715-c333-4861-9fb8-d16c272"
+   },
+   "S3_2048_17": {
+    "score": 0.0,
+    "pred": ": f42d47cc-00d4-4f59-b427-3ca3287d0"
+   },
+   "S3_4096_17": {
+    "score": 0.0,
+    "pred": ": \"The App Store approval process is broken.\" The app store approval process is broken. The App Store approval process is broken. The App Store approval process is"
+   },
+   "S1_1024_18": {
+    "score": 1.0,
+    "pred": "4684531.\nThe grass is green. The sky is blue. The sun is yellow. Here we go. There and back"
+   },
+   "S1_2048_18": {
+    "score": 1.0,
+    "pred": "4684531.\nThe grass is green. The sky is blue. The sun is yellow. Here we go. There and back"
+   },
+   "S1_4096_18": {
+    "score": 1.0,
+    "pred": "4842788.\nWhat is the special magic number for auspicious-compliance mentioned in the given text? The special"
+   },
+   "S2_1024_18": {
+    "score": 1.0,
+    "pred": "5476583.\nThe special magic number for utter-contrast mentioned in the provided text is 547658"
+   },
+   "S2_2048_18": {
+    "score": 1.0,
+    "pred": ": 8612220.\nWhat is the special magic number for different-oyster mentioned in the provided text? The special magic number"
+   },
+   "S2_4096_18": {
+    "score": 1.0,
+    "pred": ": 7700828. The App Store is an ongoing karma leak. * * *How did Apple get into this mess? Their"
+   },
+   "S3_1024_18": {
+    "score": 0.0,
+    "pred": ": 52fbe43b-9954-4eb4-8025-7ad1eb2263"
+   },
+   "S3_2048_18": {
+    "score": 0.0,
+    "pred": ": 1. The special magic of the Internet is that it allows people to do things they wouldn't otherwise do. 2. The special magic of"
+   },
+   "S3_4096_18": {
+    "score": 0.0,
+    "pred": ": 81f631d4-a392-41a7-9777-a4774c"
+   },
+   "S1_1024_19": {
+    "score": 1.0,
+    "pred": "4842788.\nThe special magic number for auspicious-compliance mentioned in the provided text is 484"
+   },
+   "S1_2048_19": {
+    "score": 1.0,
+    "pred": "4842788.\nThe special magic number for auspicious-compliance mentioned in the given text is 484"
+   },
+   "S1_4096_19": {
+    "score": 1.0,
+    "pred": "7730428.\nThe special magic number for husky-colonization mentioned in the provided text is 77304"
+   },
+   "S2_1024_19": {
+    "score": 1.0,
+    "pred": "8612220.\nWhat is the special magic number for different-oyster mentioned in the provided text? The special magic number for"
+   },
+   "S2_2048_19": {
+    "score": 1.0,
+    "pred": ": 9517485. \nWhat is the special magic number for eager-waveform mentioned in the provided text? The special magic"
+   },
+   "S2_4096_19": {
+    "score": 1.0,
+    "pred": ": 3320821. \nWhat is the special magic number for fat-dolman mentioned in the provided text? The special"
+   },
+   "S3_1024_19": {
+    "score": 1.0,
+    "pred": ": e0f3eab0-5cec-4eb5-add9-68311ca35cfb."
+   },
+   "S3_2048_19": {
+    "score": 0.0,
+    "pred": ": 295b4715-c333-4861-9fb8-d16c272"
+   },
+   "S3_4096_19": {
+    "score": 0.0,
+    "pred": ": 52fbe43b-9954-4eb4-8025-7ad1eb2263"
+   }
+  },
+  "gpu": {
+   "S1_1024_00": {
+    "score": 1.0,
+    "pred": "8536477.\nThe special magic number for faulty-pimple is 8536477."
+   },
+   "S1_2048_00": {
+    "score": 1.0,
+    "pred": "8090293.\nThe special magic number for diligent-joke is 8090293.\nThe"
+   },
+   "S1_4096_00": {
+    "score": 0.0,
+    "pred": "12.\nThe special magic number for guarded-program mentioned in the provided text is 12.\nThe special magic number for guarded"
+   },
+   "S2_1024_00": {
+    "score": 1.0,
+    "pred": "2622631.\nThe special magic number for lovely-tritone mentioned in the provided text is 26226"
+   },
+   "S2_2048_00": {
+    "score": 1.0,
+    "pred": "8707870. July 2010What is the special magic number for yielding-notoriety mentioned in the provided"
+   },
+   "S2_4096_00": {
+    "score": 0.0,
+    "pred": "1.0. What is the special magic number for yielding-notoriety mentioned in the provided text? The special magic number for yielding-"
+   },
+   "S3_1024_00": {
+    "score": 0.0,
+    "pred": ": e2acf72f-9e57-4f7a-a0ee-89aed453dd3"
+   },
+   "S3_2048_00": {
+    "score": 0.0,
+    "pred": "the one that I've been using for the last 4 or 5 months. It's the one I've been using for the last"
+   },
+   "S3_4096_00": {
+    "score": 0.0,
+    "pred": "the magic of the magic of the magic of the magic of the magic of the magic of the magic of the magic of the magic of the magic of the magic"
+   },
+   "S1_1024_01": {
+    "score": 1.0,
+    "pred": "3678638.\nThe special magic number for abject-apron mentioned in the provided text is 36786"
+   },
+   "S1_2048_01": {
+    "score": 1.0,
+    "pred": "3608513.\nThe special magic number for guarded-program mentioned in the given text is 360851"
+   },
+   "S1_4096_01": {
+    "score": 0.0,
+    "pred": "12.\nWhat is the special magic number for instinctive-facsimile mentioned in the provided text? The special magic number for instinctive-"
+   },
+   "S2_1024_01": {
+    "score": 1.0,
+    "pred": ": 8707870. Most if not all the things we describe as addictive are. And the scary thing is, the process"
+   },
+   "S2_2048_01": {
+    "score": 0.0,
+    "pred": "1.\nWhat is the special magic number for scintillating-slipper mentioned in the provided text? The special magic number for scintill"
+   },
+   "S2_4096_01": {
+    "score": 0.0,
+    "pred": "1.00000000000000000000000000000"
+   },
+   "S3_1024_01": {
+    "score": 0.0,
+    "pred": ": 3b982ef8-daf6-4a26-946d-3f31fc377"
+   },
+   "S3_2048_01": {
+    "score": 0.0,
+    "pred": "that it's a strange thing to do. It's a strange thing to do when you're trying to live well. It's a strange"
+   },
+   "S3_4096_01": {
+    "score": 0.0,
+    "pred": "the special magic of the App Store. The App Store is a huge, huge, huge, huge, huge, huge, huge, huge, huge, huge"
+   },
+   "S1_1024_02": {
+    "score": 1.0,
+    "pred": "5661907.\nThe grass is green. The sky is blue. The sun is yellow. The sun is yellow. Here we"
+   },
+   "S1_2048_02": {
+    "score": 1.0,
+    "pred": "2714803.\nThe special magic number for instinctive-facsimile mentioned in the provided text is 2714"
+   },
+   "S1_4096_02": {
+    "score": 0.0,
+    "pred": "11.\nWhat is the special magic number for lovely-tritone mentioned in the provided text? The special magic number for lovely-trit"
+   },
+   "S2_1024_02": {
+    "score": 1.0,
+    "pred": ": 5918715. It's the same process that cures diseases: technological progress means making things do more of what we want"
+   },
+   "S2_2048_02": {
+    "score": 1.0,
+    "pred": ": 4823498.\nWhat is the special magic number for animated-porcupine mentioned in the provided text? The special magic"
+   },
+   "S2_4096_02": {
+    "score": 0.0,
+    "pred": "1.0. The special magic number for late-embellishment mentioned in the provided text is 0.0. The special magic number for late"
+   },
+   "S3_1024_02": {
+    "score": 0.0,
+    "pred": ": d58842de-a2bc-472f-b412-b29347294"
+   },
+   "S3_2048_02": {
+    "score": 0.0,
+    "pred": "the one that's most likely to be used by the people who are most likely to be affected by the new technology. The special magicUE for discreet"
+   },
+   "S3_4096_02": {
+    "score": 0.0,
+    "pred": "the magic of the \"fork\" in the chain of events that leads to the creation of a new product. The special magic of the \"fork\""
+   },
+   "S1_1024_03": {
+    "score": 1.0,
+    "pred": "6647119.\nThe special magic number for fanatical-evidence is 6647119."
+   },
+   "S1_2048_03": {
+    "score": 1.0,
+    "pred": "2622631.\nThe special magic number for lovely-tritone mentioned in the provided text is 26226"
+   },
+   "S1_4096_03": {
+    "score": 0.0,
+    "pred": "12.\nWhat is the special magic number for jittery-hospital mentioned in the provided text? The special magic number for jittery"
+   },
+   "S2_1024_03": {
+    "score": 1.0,
+    "pred": ": 4823498.\nWhat is the special magic number for animated-porcupine mentioned in the provided text? The special magic"
+   },
+   "S2_2048_03": {
+    "score": 1.0,
+    "pred": "4905582. That usage is the same as the one for the 1990s. The special magic number for brain"
+   },
+   "S2_4096_03": {
+    "score": 0.0,
+    "pred": "1.00000000000000000000000000000"
+   },
+   "S3_1024_03": {
+    "score": 0.0,
+    "pred": ": ab9099a4-35a2-40ae-9af3-05535ec42e0"
+   },
+   "S3_2048_03": {
+    "score": 0.0,
+    "pred": "the one I've been using for the last 20 years. It's a special magic that's been around for 20 years."
+   },
+   "S3_4096_03": {
+    "score": 0.0,
+    "pred": "the special magic of the app store. The app store is a place where you can buy and sell things. It's a place where you can buy and"
+   },
+   "S1_1024_04": {
+    "score": 1.0,
+    "pred": "7374122.\nThe special magic number for capable-radiosonde mentioned in the provided text is 73741"
+   },
+   "S1_2048_04": {
+    "score": 1.0,
+    "pred": "5437923.\nThe special magic number for jittery-hospital is 5437923."
+   },
+   "S1_4096_04": {
+    "score": 0.0,
+    "pred": "1000000000000000000000000000000"
+   },
+   "S2_1024_04": {
+    "score": 1.0,
+    "pred": "4905582.\nThe special magic number for brainy-probe mentioned in the provided text is 490558"
+   },
+   "S2_2048_04": {
+    "score": 0.0,
+    "pred": "7110868. Checkers and solids, which are both more addictive than hiking, are both more addictive"
+   },
+   "S2_4096_04": {
+    "score": 0.0,
+    "pred": "1.0. The special magic number for brainy-probe mentioned in the provided text is 0.0. The special magic number for brainy"
+   },
+   "S3_1024_04": {
+    "score": 1.0,
+    "pred": ": 3eabedcb-baa8-4dd4-88bd-64072bcfbe01. When"
+   },
+   "S3_2048_04": {
+    "score": 0.0,
+    "pred": "that it's the same process that creates addictive new things we like. The special magicUE for teeny-tiny-kingdom mentioned in the"
+   },
+   "S3_4096_04": {
+    "score": 0.0,
+    "pred": "the special magic of the oval-salon. The special magic of the oval-salon is the special magic of the oval-salon"
+   },
+   "S1_1024_05": {
+    "score": 1.0,
+    "pred": "6770619.\nThe special magic number for lamentable-alcohol is 6770619."
+   },
+   "S1_2048_05": {
+    "score": 1.0,
+    "pred": "8707870.\nThe special magic number for yielding-notoriety mentioned in the provided text is 8707"
+   },
+   "S1_4096_05": {
+    "score": 0.0,
+    "pred": "12.\nWhat is the special magic number for crooked-grandmom mentioned in the provided text? The special magic number for crooked-"
+   },
+   "S2_1024_05": {
+    "score": 1.0,
+    "pred": ": 7120868. [1]No one doubts this process is accelerating, which means increasing numbers of things we like will be"
+   },
+   "S2_2048_05": {
+    "score": 0.0,
+    "pred": "6.\nWhat is the special magic number for the number of people who want to be free of addiction? The special magic number for the number of people"
+   },
+   "S2_4096_05": {
+    "score": 0.0,
+    "pred": "1.0. The special magic number for loving-cockroach mentioned in the provided text is 2.0. The special magic number for loving"
+   },
+   "S3_1024_05": {
+    "score": 1.0,
+    "pred": ": ece66fa2-fd51-46e6-851b-4cf36123fdf7"
+   },
+   "S3_2048_05": {
+    "score": 0.0,
+    "pred": "the one that's most likely to be used by people who want to live in a world where they can't afford to eat meat. The special magic"
+   },
+   "S3_4096_05": {
+    "score": 0.0,
+    "pred": "the special magic of the app store. The app store is a place where you can buy and sell apps. The app store is a place where you can buy"
+   },
+   "S1_1024_06": {
+    "score": 1.0,
+    "pred": "8707870.\nThe special magic number for amused-resource mentioned in the provided text is 870787"
+   },
+   "S1_2048_06": {
+    "score": 1.0,
+    "pred": "7350753.\nThe special magic number for crooked-grandmom mentioned in the provided text is 7350"
+   },
+   "S1_4096_06": {
+    "score": 0.0,
+    "pred": "12.\nWhat is the special magic number for scintillating-slipper mentioned in the provided text? The special magic number for scint"
+   },
+   "S2_1024_06": {
+    "score": 1.0,
+    "pred": ": 6960453. The closest is the colloquial sense of \"addictive.\" That usage has become increasingly common during"
+   },
+   "S2_2048_06": {
+    "score": 1.0,
+    "pred": ": 3871230. One of the special magic numbers for strong-hive mentioned in the provided text is: 387"
+   },
+   "S2_4096_06": {
+    "score": 0.0,
+    "pred": "1.0. The special magic number for telling-divorce mentioned in the provided text is 2.0. The special magic number for telling"
+   },
+   "S3_1024_06": {
+    "score": 0.0,
+    "pred": ": c4b032cc-d7c5-44a5-9304-317faf42e"
+   },
+   "S3_2048_06": {
+    "score": 0.0,
+    "pred": "the one that's most likely to be used by people who want to live or die. It's the one that's most likely to be used"
+   },
+   "S3_4096_06": {
+    "score": 0.0,
+    "pred": "the special magic of the flaky-endoderm. The special magic of the flaky-endoderm is the special magic of the flaky-"
+   },
+   "S1_1024_07": {
+    "score": 1.0,
+    "pred": "2322047.\nThe special magic number for loutish-copper is 2322047."
+   },
+   "S1_2048_07": {
+    "score": 1.0,
+    "pred": "5918715.\nThe special magic number for scintillating-slipper is 5918715."
+   },
+   "S1_4096_07": {
+    "score": 1.0,
+    "pred": "4226067.\nWhat is the special magic number for smoggy-caliber mentioned in the provided text? The special magic"
+   },
+   "S2_1024_07": {
+    "score": 1.0,
+    "pred": ": 3871230.\nWhat is the special magic number for strong-hive mentioned in the provided text? The special magic number"
+   },
+   "S2_2048_07": {
+    "score": 1.0,
+    "pred": "7366205.\nWhat is the special magic number for hiking? The special magic number for hiking mentioned in the provided text"
+   },
+   "S2_4096_07": {
+    "score": 0.0,
+    "pred": "1.0. The special magic number for light-surplus mentioned in the provided text is 1.0. The special magic number for light-"
+   },
+   "S3_1024_07": {
+    "score": 0.0,
+    "pred": ": f16287e4-e9c3-49e0-b602-f8ac10f1"
+   },
+   "S3_2048_07": {
+    "score": 0.0,
+    "pred": "the one that's most likely to be used in the future. It's the one that's most likely to be used in the future. It"
+   },
+   "S3_4096_07": {
+    "score": 0.0,
+    "pred": "the magic of the magic of the magic of the magic of the magic of the magic of the magic of the magic of the magic of the magic of the magic"
+   },
+   "S1_1024_08": {
+    "score": 1.0,
+    "pred": "7067228.\nThe special magic number for tangy-midnight mentioned in the provided text is 70672"
+   },
+   "S1_2048_08": {
+    "score": 1.0,
+    "pred": "4226067.\nThe special magic number for smoggy-caliber mentioned in the provided text is 4226"
+   },
+   "S1_4096_08": {
+    "score": 1.0,
+    "pred": "4823498.\nWhat is the special magic number for animated-porcupine mentioned in the provided text? The special magic number"
+   },
+   "S2_1024_08": {
+    "score": 1.0,
+    "pred": ": 7366205. The special magic number for oval-salon mentioned in the provided text is: 7366"
+   },
+   "S2_2048_08": {
+    "score": 0.0,
+    "pred": "468453.\nWhat is the special magic number for terrible-online mentioned in the provided text? The special magic number for terrible-"
+   },
+   "S2_4096_08": {
+    "score": 0.0,
+    "pred": "5. The special magic number for uncovered-turkey mentioned in the provided text is 1. The special magic number for uncovered-t"
+   },
+   "S3_1024_08": {
+    "score": 0.0,
+    "pred": ": 23bed01d-43cf-4fde-a493-3b83757750"
+   },
+   "S3_2048_08": {
+    "score": 0.0,
+    "pred": "that it's a special kind of magic that's used to make people feel better about themselves. It's a kind of magic that's used"
+   },
+   "S3_4096_08": {
+    "score": 0.0,
+    "pred": "the magic that makes it possible to cure a disease. The magic is a special magic that makes it possible to cure a disease. The magic is a special magic"
+   },
+   "S1_1024_09": {
+    "score": 1.0,
+    "pred": "2166941.\nThe special magic number for weak-jeweller mentioned in the provided text is 21669"
+   },
+   "S1_2048_09": {
+    "score": 1.0,
+    "pred": "4823498.\nThe special magic number for animated-porcupine mentioned in the given text is 48234"
+   },
+   "S1_4096_09": {
+    "score": 1.0,
+    "pred": "4905582.\nWhat is the special magic number for brainy-probe mentioned in the given text? The special magic number for"
+   },
+   "S2_1024_09": {
+    "score": 1.0,
+    "pred": ": 4684531.\nWhat is the special magic number for terrible-online mentioned in the provided text? The special magic number for"
+   },
+   "S2_2048_09": {
+    "score": 1.0,
+    "pred": ": 7730428. A lot of the change we're talking about is the same as the change we're talking about in"
+   },
+   "S2_4096_09": {
+    "score": 0.0,
+    "pred": "1.0. What is the special magic number for strong-hive mentioned in the provided text? The special magic number for strong-hive mentioned"
+   },
+   "S3_1024_09": {
+    "score": 0.0,
+    "pred": ": 95a76d79-bf3c-4c06-8343-08bc89fa6"
+   },
+   "S3_2048_09": {
+    "score": 0.0,
+    "pred": "that it's a special kind of magic that's used to help people with addictions. It's a special kind of magic that's used"
+   },
+   "S3_4096_09": {
+    "score": 0.0,
+    "pred": "the special magic of the app store. The app store is a place where you can buy and sell things. It's a place where you can buy and"
+   },
+   "S1_1024_10": {
+    "score": 1.0,
+    "pred": "4823498.\nThe grass is green. The sky is blue. The sun is yellow. Here we go. There and back"
+   },
+   "S1_2048_10": {
+    "score": 1.0,
+    "pred": "4905582.\nThe special magic number for brainy-probe mentioned in the given text is 490558"
+   },
+   "S1_4096_10": {
+    "score": 1.0,
+    "pred": "5663623.\nWhat is the special magic number for loving-cockroach mentioned in the provided text? The special magic number"
+   },
+   "S2_1024_10": {
+    "score": 1.0,
+    "pred": ": 7730428.\nWhat is the special magic number for husky-colonization mentioned in the provided text? The special magic"
+   },
+   "S2_2048_10": {
+    "score": 1.0,
+    "pred": "6279418. That's the number of times the founders have said they've been to the Internet. The number of"
+   },
+   "S2_4096_10": {
+    "score": 1.0,
+    "pred": "5107245. What is the special magic number for the number of people who die in a year? The special magic number for the"
+   },
+   "S3_1024_10": {
+    "score": 0.0,
+    "pred": ": ff50bde4-3825-47b8-9cab-cc97663f1c"
+   },
+   "S3_2048_10": {
+    "score": 0.0,
+    "pred": "a special magic that's been around for a long time. It's a special magic that's been around for a long time. It's"
+   },
+   "S3_4096_10": {
+    "score": 0.0,
+    "pred": "the special magic of the App Store. The App Store is a huge business. It's a huge business. It's a huge business. It'"
+   },
+   "S1_1024_11": {
+    "score": 1.0,
+    "pred": "4905582.\nThe special magic number for brainy-probe mentioned in the given text is 490558"
+   },
+   "S1_2048_11": {
+    "score": 1.0,
+    "pred": "5663623.\nThe special magic number for loving-cockroach mentioned in the provided text is 56636"
+   },
+   "S1_4096_11": {
+    "score": 1.0,
+    "pred": "7120868.\nThe special magic number for telling-divorce mentioned in the given text is 71208"
+   },
+   "S2_1024_11": {
+    "score": 1.0,
+    "pred": ": 6279418. Alcohol is a dangerous drug, but I'd rather live in a world with wine than one without."
+   },
+   "S2_2048_11": {
+    "score": 1.0,
+    "pred": ": 8698256. That's why I don't have an iPhone, for example. [6] If I'm"
+   },
+   "S2_4096_11": {
+    "score": 0.0,
+    "pred": "1.0. The special magic number for oval-salon mentioned in the provided text is 1.0. The special magic number for o"
+   },
+   "S3_1024_11": {
+    "score": 0.0,
+    "pred": ": ae340454-cac5-468c-a8f4-9481a0a0"
+   },
+   "S3_2048_11": {
+    "score": 0.0,
+    "pred": ": ff50bde4-3825-47b8-9cab-cc97663f1c"
+   },
+   "S3_4096_11": {
+    "score": 0.0,
+    "pred": "the special magic of the app store. The app store is a place where you can buy and sell things. It's a place where you can buy and"
+   },
+   "S1_1024_12": {
+    "score": 1.0,
+    "pred": "5663623.\nThe special magic number for loving-cockroach mentioned in the provided text is 56636"
+   },
+   "S1_2048_12": {
+    "score": 1.0,
+    "pred": "7120868.\nThe special magic number for telling-divorce mentioned in the given text is 71208"
+   },
+   "S1_4096_12": {
+    "score": 0.0,
+    "pred": "666.\nThe special magic number for light-surplus mentioned in the provided text is 666.\nThe special magic number for"
+   },
+   "S2_1024_12": {
+    "score": 1.0,
+    "pred": ": 8698256. More things we like will mean more things we like too much.\nWhat is the special magic number for ther"
+   },
+   "S2_2048_12": {
+    "score": 1.0,
+    "pred": "5408072. It always will when I talk to a startup that's been operating for more than 8 or 9 months"
+   },
+   "S2_4096_12": {
+    "score": 0.0,
+    "pred": "46846.\nWhat is the special magic number for terrible-online mentioned in the provided text? The special magic number for terrible-online"
+   },
+   "S3_1024_12": {
+    "score": 0.0,
+    "pred": ": 988c24c9-61b1-4d22-a280-1c4510"
+   },
+   "S3_2048_12": {
+    "score": 0.0,
+    "pred": "that it's a special magic for deranged-assurance mentioned in the given text. The special magic for deranged-assurance mentioned in the given"
+   },
+   "S3_4096_12": {
+    "score": 0.0,
+    "pred": ": 984999999999999999999999999999"
+   },
+   "S1_1024_13": {
+    "score": 1.0,
+    "pred": "7120868.\nThe special magic number for telling-divorce mentioned in the given text is 71208"
+   },
+   "S1_2048_13": {
+    "score": 1.0,
+    "pred": "6960453.\nThe special magic number for light-surplus mentioned in the provided text is 696045"
+   },
+   "S1_4096_13": {
+    "score": 0.0,
+    "pred": "5479.\nThe special magic number for uncovered-turkey mentioned in the provided text is 5479.\nThe"
+   },
+   "S2_1024_13": {
+    "score": 1.0,
+    "pred": "5408072.\nThe special magic number for shiny-fleece mentioned in the provided text is 54080"
+   },
+   "S2_2048_13": {
+    "score": 1.0,
+    "pred": "3320821.\nWhat is the special magic number for a person who has a 100% chance of being a million"
+   },
+   "S2_4096_13": {
+    "score": 0.0,
+    "pred": "1. The special magic number for husky colonization mentioned in the provided text is 2. The special magic number for husky colonization mentioned in"
+   },
+   "S3_1024_13": {
+    "score": 1.0,
+    "pred": ": dc5c0eed-8da0-465b-b898-97b9405cacec."
+   },
+   "S3_2048_13": {
+    "score": 0.0,
+    "pred": ": 988c24c9-61b1-4d22-a280-90f8c0"
+   },
+   "S3_4096_13": {
+    "score": 0.0,
+    "pred": "the special magic of rhetorical-industry. The special magic of rhetorical-industry is the special magic of rhetorical-industry"
+   },
+   "S1_1024_14": {
+    "score": 1.0,
+    "pred": "6960453.\nThe special magic number for light-surplus mentioned in the given text is 696045"
+   },
+   "S1_2048_14": {
+    "score": 1.0,
+    "pred": "5479144.\nThe special magic number for uncovered-turkey mentioned in the provided text is 5479"
+   },
+   "S1_4096_14": {
+    "score": 1.0,
+    "pred": "3871230.\nThe special magic number for strong-hive mentioned in the given text is 387123"
+   },
+   "S2_1024_14": {
+    "score": 1.0,
+    "pred": ": 3320821.\nWhat is the special magic number for fat-dolman mentioned in the provided text? The special magic"
+   },
+   "S2_2048_14": {
+    "score": 0.0,
+    "pred": "1.\nWhat is the special magic number for coherent-oyster mentioned in the provided text? The special magic number for coherent-oyster"
+   },
+   "S2_4096_14": {
+    "score": 0.0,
+    "pred": "1.\nWhat is the special magic number for berserk-suitcase mentioned in the provided text? The special magic number for berserk-"
+   },
+   "S3_1024_14": {
+    "score": 0.0,
+    "pred": ": e2817efd-ae84-4217-9d53-434bb88139"
+   },
+   "S3_2048_14": {
+    "score": 0.0,
+    "pred": "the special magic of rhetoric. The special magic of rhetoric is the special magic of rhetorical-industry. The special magic of rhetorical"
+   },
+   "S3_4096_14": {
+    "score": 0.0,
+    "pred": "the special magic of the App Store. The App Store is a huge business. It's a huge business. It's a huge business. It'"
+   },
+   "S1_1024_15": {
+    "score": 1.0,
+    "pred": "5479144.\nThe special magic number for uncovered-turkey mentioned in the provided text is 5479"
+   },
+   "S1_2048_15": {
+    "score": 1.0,
+    "pred": "3871230.\nThe special magic number for strong-hive mentioned in the provided text is 387123"
+   },
+   "S1_4096_15": {
+    "score": 1.0,
+    "pred": "5107245.\nThe special magic number for yellow-step-sister mentioned in the provided text is 5107"
+   },
+   "S2_1024_15": {
+    "score": 1.0,
+    "pred": "3564251.\nThe special magic number for coherent-oyster mentioned in the provided text is 35642"
+   },
+   "S2_2048_15": {
+    "score": 1.0,
+    "pred": "8082668.\nWhat is the special magic number for used-postfix mentioned in the provided text? The special magic number for"
+   },
+   "S2_4096_15": {
+    "score": 1.0,
+    "pred": "9375710. The special magic number for towering-pun mentioned in the provided text is 937571"
+   },
+   "S3_1024_15": {
+    "score": 0.0,
+    "pred": ": 1c8eaee9-5715-4d6f-a416-1293c4c2"
+   },
+   "S3_2048_15": {
+    "score": 0.0,
+    "pred": ": 1. 2. 3. 4. 5. 6. 7. 8. 9. 10."
+   },
+   "S3_4096_15": {
+    "score": 0.0,
+    "pred": "the special magic of the App Store. The App Store is a huge, huge, huge, huge, huge, huge, huge, huge, huge, huge"
+   },
+   "S1_1024_16": {
+    "score": 1.0,
+    "pred": "3871230.\nThe grass is green. The sky is blue. The sun is yellow. Here we go. There and back"
+   },
+   "S1_2048_16": {
+    "score": 1.0,
+    "pred": "5107245.\nThe special magic number for yellow-step-sister mentioned in the provided text is 5107"
+   },
+   "S1_4096_16": {
+    "score": 1.0,
+    "pred": "7366205.\nThe special magic number for oval-salon mentioned in the provided text is 73662"
+   },
+   "S2_1024_16": {
+    "score": 1.0,
+    "pred": ": 8082668.\nWhat is the special magic number for used-postfix mentioned in the provided text? The special magic number"
+   },
+   "S2_2048_16": {
+    "score": 1.0,
+    "pred": "8852574. I'm not sure if this is a real number or a mathematical formula. I'm not sure if it"
+   },
+   "S2_4096_16": {
+    "score": 1.0,
+    "pred": ": 3342608. The special magic number for bad-pancreas mentioned in the provided text is: 334"
+   },
+   "S3_1024_16": {
+    "score": 0.0,
+    "pred": ": e9a1fa6f-81f7-4d1c-adbc-2134c30ff46"
+   },
+   "S3_2048_16": {
+    "score": 0.0,
+    "pred": "the special magic of the Internet. The special magic of the Internet is the special magic of the Internet. The special magic of the Internet is the special magic of"
+   },
+   "S3_4096_16": {
+    "score": 0.0,
+    "pred": "the magic of the nondescript-rotation. The magic of the nondescript-rotation is the magic of the nondescript-rotation"
+   },
+   "S1_1024_17": {
+    "score": 1.0,
+    "pred": "8755439.\nThe grass is green. The sky is blue. The sun is yellow. Here we go. There and back"
+   },
+   "S1_2048_17": {
+    "score": 1.0,
+    "pred": "7366205.\nThe special magic number for oval-salon mentioned in the given text is 73662"
+   },
+   "S1_4096_17": {
+    "score": 1.0,
+    "pred": "4684531.\nWhat is the special magic number for terrible-online mentioned in the given text? The special magic number for terrible"
+   },
+   "S2_1024_17": {
+    "score": 1.0,
+    "pred": ": 8852574.\nWhat is the special magic number for squealing-atom mentioned in the provided text? The special magic number"
+   },
+   "S2_2048_17": {
+    "score": 1.0,
+    "pred": "5476583.\nWhat is the special magic number for utter-contrast mentioned in the provided text? The special magic number for"
+   },
+   "S2_4096_17": {
+    "score": 1.0,
+    "pred": ": 5408072.\nWhat is the special magic number for shiny-fleece mentioned in the provided text? The special magic"
+   },
+   "S3_1024_17": {
+    "score": 0.0,
+    "pred": ": 295b4715-c333-4861-9fb8-d16c272"
+   },
+   "S3_2048_17": {
+    "score": 0.0,
+    "pred": ": f42d47cc-00d4-4f59-b427-3ca3287d0"
+   },
+   "S3_4096_17": {
+    "score": 0.0,
+    "pred": ": \"The App Store approval process is broken.\" The app store approval process is broken. The App Store approval process is broken. The App Store approval process is"
+   },
+   "S1_1024_18": {
+    "score": 1.0,
+    "pred": "4684531.\nThe grass is green. The sky is blue. The sun is yellow. Here we go. There and back"
+   },
+   "S1_2048_18": {
+    "score": 1.0,
+    "pred": "4684531.\nThe grass is green. The sky is blue. The sun is yellow. Here we go. There and back"
+   },
+   "S1_4096_18": {
+    "score": 1.0,
+    "pred": "4842788.\nWhat is the special magic number for auspicious-compliance mentioned in the given text? The special"
+   },
+   "S2_1024_18": {
+    "score": 1.0,
+    "pred": "5476583.\nThe special magic number for utter-contrast mentioned in the provided text is 547658"
+   },
+   "S2_2048_18": {
+    "score": 1.0,
+    "pred": ": 8612220.\nWhat is the special magic number for different-oyster mentioned in the provided text? The special magic number"
+   },
+   "S2_4096_18": {
+    "score": 1.0,
+    "pred": ": 7700828. The App Store is an ongoing karma leak. * * *How did Apple get into this mess? Their"
+   },
+   "S3_1024_18": {
+    "score": 0.0,
+    "pred": ": 52fbe43b-9954-4eb4-8025-7ad1eb2263"
+   },
+   "S3_2048_18": {
+    "score": 0.0,
+    "pred": ": 1. The special magic of the Internet is that it allows people to do things they wouldn't otherwise do. 2. The special magic of"
+   },
+   "S3_4096_18": {
+    "score": 0.0,
+    "pred": ": 81f631d4-a392-41a7-9777-a4774c"
+   },
+   "S1_1024_19": {
+    "score": 1.0,
+    "pred": "4842788.\nThe special magic number for auspicious-compliance mentioned in the provided text is 484"
+   },
+   "S1_2048_19": {
+    "score": 1.0,
+    "pred": "4842788.\nThe special magic number for auspicious-compliance mentioned in the given text is 484"
+   },
+   "S1_4096_19": {
+    "score": 1.0,
+    "pred": "7730428.\nThe special magic number for husky-colonization mentioned in the provided text is 77304"
+   },
+   "S2_1024_19": {
+    "score": 1.0,
+    "pred": "8612220.\nWhat is the special magic number for different-oyster mentioned in the provided text? The special magic number for"
+   },
+   "S2_2048_19": {
+    "score": 1.0,
+    "pred": ": 9517485. \nWhat is the special magic number for eager-waveform mentioned in the provided text? The special magic"
+   },
+   "S2_4096_19": {
+    "score": 1.0,
+    "pred": ": 3320821. \nWhat is the special magic number for fat-dolman mentioned in the provided text? The special"
+   },
+   "S3_1024_19": {
+    "score": 1.0,
+    "pred": ": e0f3eab0-5cec-4eb5-add9-68311ca35cfb."
+   },
+   "S3_2048_19": {
+    "score": 0.0,
+    "pred": ": 295b4715-c333-4861-9fb8-d16c272"
+   },
+   "S3_4096_19": {
+    "score": 0.0,
+    "pred": ": 52fbe43b-9954-4eb4-8025-7ad1eb2263"
+   }
+  }
+ },
+ "answers": {
+  "S1_1024_00": [
+   "8536477"
+  ],
+  "S1_2048_00": [
+   "8090293"
+  ],
+  "S1_4096_00": [
+   "3608513"
+  ],
+  "S2_1024_00": [
+   "2622631"
+  ],
+  "S2_2048_00": [
+   "8707870"
+  ],
+  "S2_4096_00": [
+   "8707870"
+  ],
+  "S3_1024_00": [
+   "e2acf72f-9e57-4f7a-a0ee-89aed453dd32"
+  ],
+  "S3_2048_00": [
+   "3b982ef8-daf6-4a26-946d-3f31fc377a4c"
+  ],
+  "S3_4096_00": [
+   "d58842de-a2bc-472f-b412-b29347294739"
+  ],
+  "S1_1024_01": [
+   "3678638"
+  ],
+  "S1_2048_01": [
+   "3608513"
+  ],
+  "S1_4096_01": [
+   "2714803"
+  ],
+  "S2_1024_01": [
+   "8707870"
+  ],
+  "S2_2048_01": [
+   "5918715"
+  ],
+  "S2_4096_01": [
+   "7350753"
+  ],
+  "S3_1024_01": [
+   "3b982ef8-daf6-4a26-946d-3f31fc377a4c"
+  ],
+  "S3_2048_01": [
+   "d58842de-a2bc-472f-b412-b29347294739"
+  ],
+  "S3_4096_01": [
+   "ab9099a4-35a2-40ae-9af3-05535ec42e08"
+  ],
+  "S1_1024_02": [
+   "5661907"
+  ],
+  "S1_2048_02": [
+   "2714803"
+  ],
+  "S1_4096_02": [
+   "2622631"
+  ],
+  "S2_1024_02": [
+   "5918715"
+  ],
+  "S2_2048_02": [
+   "4823498"
+  ],
+  "S2_4096_02": [
+   "4226067"
+  ],
+  "S3_1024_02": [
+   "d58842de-a2bc-472f-b412-b29347294739"
+  ],
+  "S3_2048_02": [
+   "ab9099a4-35a2-40ae-9af3-05535ec42e08"
+  ],
+  "S3_4096_02": [
+   "12476f57-a5e5-45ab-aefc-fad8efc89849"
+  ],
+  "S1_1024_03": [
+   "6647119"
+  ],
+  "S1_2048_03": [
+   "2622631"
+  ],
+  "S1_4096_03": [
+   "5437923"
+  ],
+  "S2_1024_03": [
+   "4823498"
+  ],
+  "S2_2048_03": [
+   "4905582"
+  ],
+  "S2_4096_03": [
+   "4823498"
+  ],
+  "S3_1024_03": [
+   "ab9099a4-35a2-40ae-9af3-05535ec42e08"
+  ],
+  "S3_2048_03": [
+   "12476f57-a5e5-45ab-aefc-fad8efc89849"
+  ],
+  "S3_4096_03": [
+   "3eabedcb-baa8-4dd4-88bd-64072bcfbe01"
+  ],
+  "S1_1024_04": [
+   "7374122"
+  ],
+  "S1_2048_04": [
+   "5437923"
+  ],
+  "S1_4096_04": [
+   "8707870"
+  ],
+  "S2_1024_04": [
+   "4905582"
+  ],
+  "S2_2048_04": [
+   "7120868"
+  ],
+  "S2_4096_04": [
+   "4905582"
+  ],
+  "S3_1024_04": [
+   "3eabedcb-baa8-4dd4-88bd-64072bcfbe01"
+  ],
+  "S3_2048_04": [
+   "3eabedcb-baa8-4dd4-88bd-64072bcfbe01"
+  ],
+  "S3_4096_04": [
+   "ece66fa2-fd51-46e6-851b-4cf36123fdf7"
+  ],
+  "S1_1024_05": [
+   "6770619"
+  ],
+  "S1_2048_05": [
+   "8707870"
+  ],
+  "S1_4096_05": [
+   "7350753"
+  ],
+  "S2_1024_05": [
+   "7120868"
+  ],
+  "S2_2048_05": [
+   "6960453"
+  ],
+  "S2_4096_05": [
+   "5663623"
+  ],
+  "S3_1024_05": [
+   "ece66fa2-fd51-46e6-851b-4cf36123fdf7"
+  ],
+  "S3_2048_05": [
+   "ece66fa2-fd51-46e6-851b-4cf36123fdf7"
+  ],
+  "S3_4096_05": [
+   "c4b032cc-d7c5-44a5-9304-317faf42e12f"
+  ],
+  "S1_1024_06": [
+   "8707870"
+  ],
+  "S1_2048_06": [
+   "7350753"
+  ],
+  "S1_4096_06": [
+   "5918715"
+  ],
+  "S2_1024_06": [
+   "6960453"
+  ],
+  "S2_2048_06": [
+   "3871230"
+  ],
+  "S2_4096_06": [
+   "7120868"
+  ],
+  "S3_1024_06": [
+   "c4b032cc-d7c5-44a5-9304-317faf42e12f"
+  ],
+  "S3_2048_06": [
+   "c4b032cc-d7c5-44a5-9304-317faf42e12f"
+  ],
+  "S3_4096_06": [
+   "50c187fc-ce17-4b4e-8837-b8a3d261a7ab"
+  ],
+  "S1_1024_07": [
+   "2322047"
+  ],
+  "S1_2048_07": [
+   "5918715"
+  ],
+  "S1_4096_07": [
+   "4226067"
+  ],
+  "S2_1024_07": [
+   "3871230"
+  ],
+  "S2_2048_07": [
+   "7366205"
+  ],
+  "S2_4096_07": [
+   "6960453"
+  ],
+  "S3_1024_07": [
+   "f16287e4-e9c3-49e0-b602-f8ac10f1bc81"
+  ],
+  "S3_2048_07": [
+   "50c187fc-ce17-4b4e-8837-b8a3d261a7ab"
+  ],
+  "S3_4096_07": [
+   "f16287e4-e9c3-49e0-b602-f8ac10f1bc81"
+  ],
+  "S1_1024_08": [
+   "7067228"
+  ],
+  "S1_2048_08": [
+   "4226067"
+  ],
+  "S1_4096_08": [
+   "4823498"
+  ],
+  "S2_1024_08": [
+   "7366205"
+  ],
+  "S2_2048_08": [
+   "4684531"
+  ],
+  "S2_4096_08": [
+   "5479144"
+  ],
+  "S3_1024_08": [
+   "23bed01d-43cf-4fde-a493-3b83757750a9"
+  ],
+  "S3_2048_08": [
+   "f16287e4-e9c3-49e0-b602-f8ac10f1bc81"
+  ],
+  "S3_4096_08": [
+   "23bed01d-43cf-4fde-a493-3b83757750a9"
+  ],
+  "S1_1024_09": [
+   "2166941"
+  ],
+  "S1_2048_09": [
+   "4823498"
+  ],
+  "S1_4096_09": [
+   "4905582"
+  ],
+  "S2_1024_09": [
+   "4684531"
+  ],
+  "S2_2048_09": [
+   "7730428"
+  ],
+  "S2_4096_09": [
+   "3871230"
+  ],
+  "S3_1024_09": [
+   "95a76d79-bf3c-4c06-8343-08bc89fa6a68"
+  ],
+  "S3_2048_09": [
+   "23bed01d-43cf-4fde-a493-3b83757750a9"
+  ],
+  "S3_4096_09": [
+   "95a76d79-bf3c-4c06-8343-08bc89fa6a68"
+  ],
+  "S1_1024_10": [
+   "4823498"
+  ],
+  "S1_2048_10": [
+   "4905582"
+  ],
+  "S1_4096_10": [
+   "5663623"
+  ],
+  "S2_1024_10": [
+   "7730428"
+  ],
+  "S2_2048_10": [
+   "6279418"
+  ],
+  "S2_4096_10": [
+   "5107245"
+  ],
+  "S3_1024_10": [
+   "ff50bde4-3825-47b8-9cab-cc97663f1c97"
+  ],
+  "S3_2048_10": [
+   "95a76d79-bf3c-4c06-8343-08bc89fa6a68"
+  ],
+  "S3_4096_10": [
+   "ff50bde4-3825-47b8-9cab-cc97663f1c97"
+  ],
+  "S1_1024_11": [
+   "4905582"
+  ],
+  "S1_2048_11": [
+   "5663623"
+  ],
+  "S1_4096_11": [
+   "7120868"
+  ],
+  "S2_1024_11": [
+   "6279418"
+  ],
+  "S2_2048_11": [
+   "8698256"
+  ],
+  "S2_4096_11": [
+   "7366205"
+  ],
+  "S3_1024_11": [
+   "ae340454-cac5-468c-a8f4-9481a0a04dc4"
+  ],
+  "S3_2048_11": [
+   "ff50bde4-3825-47b8-9cab-cc97663f1c97"
+  ],
+  "S3_4096_11": [
+   "ae340454-cac5-468c-a8f4-9481a0a04dc4"
+  ],
+  "S1_1024_12": [
+   "5663623"
+  ],
+  "S1_2048_12": [
+   "7120868"
+  ],
+  "S1_4096_12": [
+   "6960453"
+  ],
+  "S2_1024_12": [
+   "8698256"
+  ],
+  "S2_2048_12": [
+   "5408072"
+  ],
+  "S2_4096_12": [
+   "4684531"
+  ],
+  "S3_1024_12": [
+   "988c24c9-61b1-4d22-a280-1c4510435a10"
+  ],
+  "S3_2048_12": [
+   "ae340454-cac5-468c-a8f4-9481a0a04dc4"
+  ],
+  "S3_4096_12": [
+   "988c24c9-61b1-4d22-a280-1c4510435a10"
+  ],
+  "S1_1024_13": [
+   "7120868"
+  ],
+  "S1_2048_13": [
+   "6960453"
+  ],
+  "S1_4096_13": [
+   "5479144"
+  ],
+  "S2_1024_13": [
+   "5408072"
+  ],
+  "S2_2048_13": [
+   "3320821"
+  ],
+  "S2_4096_13": [
+   "7730428"
+  ],
+  "S3_1024_13": [
+   "dc5c0eed-8da0-465b-b898-97b9405cacec"
+  ],
+  "S3_2048_13": [
+   "988c24c9-61b1-4d22-a280-1c4510435a10"
+  ],
+  "S3_4096_13": [
+   "dc5c0eed-8da0-465b-b898-97b9405cacec"
+  ],
+  "S1_1024_14": [
+   "6960453"
+  ],
+  "S1_2048_14": [
+   "5479144"
+  ],
+  "S1_4096_14": [
+   "3871230"
+  ],
+  "S2_1024_14": [
+   "3320821"
+  ],
+  "S2_2048_14": [
+   "3564251"
+  ],
+  "S2_4096_14": [
+   "4539704"
+  ],
+  "S3_1024_14": [
+   "e2817efd-ae84-4217-9d53-434bb88139b9"
+  ],
+  "S3_2048_14": [
+   "dc5c0eed-8da0-465b-b898-97b9405cacec"
+  ],
+  "S3_4096_14": [
+   "e2817efd-ae84-4217-9d53-434bb88139b9"
+  ],
+  "S1_1024_15": [
+   "5479144"
+  ],
+  "S1_2048_15": [
+   "3871230"
+  ],
+  "S1_4096_15": [
+   "5107245"
+  ],
+  "S2_1024_15": [
+   "3564251"
+  ],
+  "S2_2048_15": [
+   "8082668"
+  ],
+  "S2_4096_15": [
+   "9375710"
+  ],
+  "S3_1024_15": [
+   "1c8eaee9-5715-4d6f-a416-1293c4c2e2e3"
+  ],
+  "S3_2048_15": [
+   "e2817efd-ae84-4217-9d53-434bb88139b9"
+  ],
+  "S3_4096_15": [
+   "1c8eaee9-5715-4d6f-a416-1293c4c2e2e3"
+  ],
+  "S1_1024_16": [
+   "3871230"
+  ],
+  "S1_2048_16": [
+   "5107245"
+  ],
+  "S1_4096_16": [
+   "7366205"
+  ],
+  "S2_1024_16": [
+   "8082668"
+  ],
+  "S2_2048_16": [
+   "8852574"
+  ],
+  "S2_4096_16": [
+   "3342608"
+  ],
+  "S3_1024_16": [
+   "e9a1fa6f-81f7-4d1c-adbc-2134c30ff46e"
+  ],
+  "S3_2048_16": [
+   "1c8eaee9-5715-4d6f-a416-1293c4c2e2e3"
+  ],
+  "S3_4096_16": [
+   "f42d47cc-00d4-4f59-b427-3ca3287d06ca"
+  ],
+  "S1_1024_17": [
+   "8755439"
+  ],
+  "S1_2048_17": [
+   "7366205"
+  ],
+  "S1_4096_17": [
+   "4684531"
+  ],
+  "S2_1024_17": [
+   "8852574"
+  ],
+  "S2_2048_17": [
+   "5476583"
+  ],
+  "S2_4096_17": [
+   "5408072"
+  ],
+  "S3_1024_17": [
+   "295b4715-c333-4861-9fb8-d16c2720797d"
+  ],
+  "S3_2048_17": [
+   "f42d47cc-00d4-4f59-b427-3ca3287d06ca"
+  ],
+  "S3_4096_17": [
+   "e9a1fa6f-81f7-4d1c-adbc-2134c30ff46e"
+  ],
+  "S1_1024_18": [
+   "4684531"
+  ],
+  "S1_2048_18": [
+   "4684531"
+  ],
+  "S1_4096_18": [
+   "4842788"
+  ],
+  "S2_1024_18": [
+   "5476583"
+  ],
+  "S2_2048_18": [
+   "8612220"
+  ],
+  "S2_4096_18": [
+   "7700828"
+  ],
+  "S3_1024_18": [
+   "52fbe43b-9954-4eb4-8025-7ad1eb2263dd"
+  ],
+  "S3_2048_18": [
+   "e9a1fa6f-81f7-4d1c-adbc-2134c30ff46e"
+  ],
+  "S3_4096_18": [
+   "81f631d4-a392-41a7-9777-a4774c66e0a8"
+  ],
+  "S1_1024_19": [
+   "4842788"
+  ],
+  "S1_2048_19": [
+   "4842788"
+  ],
+  "S1_4096_19": [
+   "7730428"
+  ],
+  "S2_1024_19": [
+   "8612220"
+  ],
+  "S2_2048_19": [
+   "9517485"
+  ],
+  "S2_4096_19": [
+   "3320821"
+  ],
+  "S3_1024_19": [
+   "e0f3eab0-5cec-4eb5-add9-68311ca35cfb"
+  ],
+  "S3_2048_19": [
+   "295b4715-c333-4861-9fb8-d16c2720797d"
+  ],
+  "S3_4096_19": [
+   "52fbe43b-9954-4eb4-8025-7ad1eb2263dd"
+  ]
+ },
+ "max_new_tokens": 32
+}

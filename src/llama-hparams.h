@@ -187,6 +187,11 @@ struct llama_hparams {
     // the size of the sliding window (0 - no SWA)
     uint32_t n_swa = 0;
 
+    // native sparse attention (LLM_ARCH_GDN_NSA)
+    uint32_t nsa_block_size  = 0;
+    uint32_t nsa_block_count = 0;
+    uint32_t nsa_window      = 0;
+
     // see llama_non_causal_type
     // note: for SWA_FULL, older tokens (outside the current ubatch) are still window-clipped
     llama_non_causal_type non_causal_type = LLAMA_NON_CAUSAL_TYPE_ALL;

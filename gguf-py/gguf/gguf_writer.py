@@ -1032,6 +1032,15 @@ class GGUFWriter:
     def add_relative_attn_buckets_count(self, value: int) -> None:
         self.add_uint32(Keys.Attention.REL_BUCKETS_COUNT.format(arch=self.arch), value)
 
+    def add_nsa_block_size(self, value: int) -> None:
+        self.add_uint32(Keys.Attention.NSA_BLOCK_SIZE.format(arch=self.arch), value)
+
+    def add_nsa_block_count(self, value: int) -> None:
+        self.add_uint32(Keys.Attention.NSA_BLOCK_COUNT.format(arch=self.arch), value)
+
+    def add_nsa_window(self, value: int) -> None:
+        self.add_uint32(Keys.Attention.NSA_WINDOW.format(arch=self.arch), value)
+
     def add_sliding_window(self, value: int) -> None:
         self.add_uint32(Keys.Attention.SLIDING_WINDOW.format(arch=self.arch), value)
 

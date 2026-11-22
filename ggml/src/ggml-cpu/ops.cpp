@@ -2,6 +2,7 @@
 
 #include "ggml-cpu.h"
 #include "ggml-impl.h"
+#include "ggml-nsa-exp.h"
 #include "binary-ops.h"
 #include "simd-gemm.h"
 #include "ggml.h"
@@ -15005,6 +15006,260 @@ void ggml_compute_forward_lightning_indexer(
                 }
                 // apply mask
                 dst_row[ik] = score + GGML_CPU_FP16_TO_FP32(m_row[ik]);
+            }
+        }
+    }
+}
+
+// ggml_compute_forward_nsa_select
+
+void ggml_compute_forward_nsa_select(
+        const ggml_compute_params * params,
+        ggml_tensor * dst) {
+
+    const ggml_tensor * q     = dst->src[0];
+    const ggml_tensor * k_cmp = dst->src[1];
+    const ggml_tensor * pos   = dst->src[2];
+
+    GGML_ASSERT(dst->type == GGML_TYPE_I32 && ggml_is_contiguous(dst));
+
+    const int64_t D   = q->ne[0];
+    const int64_t Hq  = q->ne[1];
+    const int64_t T   = q->ne[2];
+    const int64_t Hkv = k_cmp->ne[1];
+    const int64_t NB  = k_cmp->ne[2];
+    const int64_t G   = Hq / Hkv;
+
+    const int32_t bs    = ggml_get_op_params_i32(dst, 0);
+    const int32_t n_sel = ggml_get_op_params_i32(dst, 1);
+    const float   scale = ggml_get_op_params_f32(dst, 2);
+
+    // per thread: exp logits [NB] + candidate scores [NB + 3]
+    float * ex    = (float *) params->wdata + params->ith*(2*NB + 3 + CACHE_LINE_SIZE_F32);
+    float * score = ex + NB;
+
+    const int64_t nr  = T*Hkv;
+    const int64_t dr  = (nr + params->nth - 1)/params->nth;
+    const int64_t ir0 = dr*params->ith;
+    const int64_t ir1 = MIN(ir0 + dr, nr);
+
+    for (int64_t ir = ir0; ir < ir1; ++ir) {
+        const int64_t t = ir / Hkv;
+        const int64_t h = ir % Hkv;
+
+        int32_t * out = (int32_t *) dst->data + ir*n_sel;
+
+        const int32_t p = *(const int32_t *) ((const char *) pos->data + t*pos->nb[0]);
+        if (p < 0) {
+            for (int32_t i = 0; i < n_sel; ++i) {
+                out[i] = -1;
+            }
+            continue;
+        }
+        const int64_t cur   = p / bs;
+        const int64_t n_cmp = MIN(NB, ((int64_t) p + 1) / bs);
+
+        for (int64_t b = 0; b < n_cmp; ++b) {
+            score[b] = 0.0f;
+        }
+
+        // same float op order as the CUDA kernel: fmaf dot, per-lane partial sums + xor butterfly, sum over heads in order
+        for (int64_t g = 0; g < G; ++g) {
+            const float * qg = (const float *) ((const char *) q->data + (h*G + g)*q->nb[1] + t*q->nb[2]);
+
+            float mx = -INFINITY;
+            for (int64_t b = 0; b < n_cmp; ++b) {
+                const float * kb = (const float *) ((const char *) k_cmp->data + h*k_cmp->nb[1] + b*k_cmp->nb[2]);
+                float dot = 0.0f;
+                for (int64_t d = 0; d < D; ++d) {
+                    dot = fmaf(qg[d], kb[d], dot);
+                }
+                ex[b] = scale*dot;
+                mx = MAX(mx, ex[b]);
+            }
+
+            float part[32] = { 0.0f };
+            for (int64_t b = 0; b < n_cmp; ++b) {
+                ex[b] = ggml_nsa_expf(ex[b] - mx); // same bits as the CUDA kernel, see ggml-nsa-exp.h
+                part[b % 32] += ex[b];
+            }
+            for (int off = 16; off > 0; off >>= 1) {
+                float tmp[32];
+                for (int l = 0; l < 32; ++l) {
+                    tmp[l] = part[l] + part[l ^ off];
+                }
+                memcpy(part, tmp, sizeof(part));
+            }
+            for (int64_t b = 0; b < n_cmp; ++b) {
+                score[b] += ex[b]/part[0];
+            }
+        }
+        for (int64_t b = 0; b < n_cmp; ++b) {
+            score[b] /= (float) G;
+        }
+
+        // forced blocks 0, cur-1, cur get score 1; the ones without a complete block go after the complete blocks, in order
+        int64_t n_cand = n_cmp;
+        int64_t extra[3];
+        auto force = [&](int64_t b) {
+            if (b < n_cmp) {
+                score[b] = 1.0f;
+            } else {
+                extra[n_cand - n_cmp] = b;
+                score[n_cand++] = 1.0f;
+            }
+        };
+        force(0);
+        if (cur >= 2) {
+            force(cur - 1);
+        }
+        if (cur >= 1) {
+            force(cur);
+        }
+
+        // top n_sel by score, ties to the lower block index; taken entries get score -1
+        for (int32_t i = 0; i < n_sel; ++i) {
+            int64_t best = -1;
+            float   bv   = -1.0f;
+            for (int64_t c = 0; c < n_cand; ++c) {
+                if (score[c] > bv) {
+                    bv   = score[c];
+                    best = c;
+                }
+            }
+            if (best < 0) {
+                out[i] = -1;
+                continue;
+            }
+            out[i] = (int32_t) (best < n_cmp ? best : extra[best - n_cmp]);
+            score[best] = -1.0f;
+        }
+    }
+}
+
+// ggml_compute_forward_nsa_sel_attn
+
+static inline float nsa_load_f32(const ggml_tensor * t, const char * p) {
+    return t->type == GGML_TYPE_F16 ? GGML_CPU_FP16_TO_FP32(*(const ggml_fp16_t *) p) : *(const float *) p;
+}
+
+void ggml_compute_forward_nsa_sel_attn(
+        const ggml_compute_params * params,
+        ggml_tensor * dst) {
+
+    const ggml_tensor * q   = dst->src[0];
+    const ggml_tensor * k   = dst->src[1];
+    const ggml_tensor * v   = dst->src[2];
+    const ggml_tensor * idx = dst->src[3];
+    const ggml_tensor * pos = dst->src[4];
+
+    GGML_ASSERT(dst->type == GGML_TYPE_F32 && ggml_is_contiguous(dst));
+
+    const int64_t D   = q->ne[0];
+    const int64_t Hq  = q->ne[1];
+    const int64_t T   = q->ne[2];
+    const int64_t Dv  = v->ne[0];
+    const int64_t Hkv = k->ne[1];
+    const int64_t N   = k->ne[2];
+    const int64_t S   = idx->ne[0];
+    const int64_t G   = Hq / Hkv;
+
+    const int32_t bs     = ggml_get_op_params_i32(dst, 0);
+    const float   scale  = ggml_get_op_params_f32(dst, 1);
+    const int32_t window = ggml_get_op_params_i32(dst, 2);
+
+    // quantized K/V: block-contiguous rows (checked in ggml_nsa_sel_attn_ext), dequantized row by row
+    const bool k_q = k->type != GGML_TYPE_F16 && k->type != GGML_TYPE_F32;
+    const bool v_q = v->type != GGML_TYPE_F16 && v->type != GGML_TYPE_F32;
+    const ggml_to_float_t k_to_float = k_q ? ggml_get_type_traits(k->type)->to_float : nullptr;
+    const ggml_to_float_t v_to_float = v_q ? ggml_get_type_traits(v->type)->to_float : nullptr;
+
+    // per thread: K tile [bs][D], V tile [bs][Dv], scores [bs], per head acc [G][Dv], max [G], sum [G]
+    float * kf  = (float *) params->wdata + params->ith*(bs*(D + Dv + 1) + G*(Dv + 2) + CACHE_LINE_SIZE_F32);
+    float * vf  = kf  + bs*D;
+    float * sc  = vf  + bs*Dv;
+    float * acc = sc  + bs;
+    float * M   = acc + G*Dv;
+    float * L   = M   + G;
+
+    const int64_t nr  = T*Hkv;
+    const int64_t dr  = (nr + params->nth - 1)/params->nth;
+    const int64_t ir0 = dr*params->ith;
+    const int64_t ir1 = MIN(ir0 + dr, nr);
+
+    for (int64_t ir = ir0; ir < ir1; ++ir) {
+        const int64_t t = ir / Hkv;
+        const int64_t h = ir % Hkv;
+
+        const int32_t   p    = *(const int32_t *) ((const char *) pos->data + t*pos->nb[0]);
+        const int32_t * irow = (const int32_t *) idx->data + ir*S;
+
+        memset(acc, 0, G*Dv*sizeof(float));
+        for (int64_t g = 0; g < G; ++g) {
+            M[g] = -INFINITY;
+            L[g] = 0.0f;
+        }
+
+        for (int64_t s = 0; s < S; ++s) {
+            const int64_t b = irow[s];
+            if (b < 0) {
+                continue;
+            }
+            const int64_t j0 = window > 0 ? MAX(b*bs, (int64_t) p - window + 1) : b*bs;
+            const int64_t j1 = MIN(b*bs + bs, MIN(N, (int64_t) p + 1));
+            if (j1 <= j0) {
+                continue;
+            }
+            const int64_t nj = j1 - j0;
+
+            for (int64_t jj = 0; jj < nj; ++jj) {
+                const char * kr = (const char *) k->data + h*k->nb[1] + (j0 + jj)*k->nb[2];
+                const char * vr = (const char *) v->data + h*v->nb[1] + (j0 + jj)*v->nb[2];
+                if (k_q) {
+                    k_to_float(kr, kf + jj*D, D);
+                } else {
+                    for (int64_t d = 0; d < D; ++d) {
+                        kf[jj*D + d] = nsa_load_f32(k, kr + d*k->nb[0]);
+                    }
+                }
+                if (v_q) {
+                    v_to_float(vr, vf + jj*Dv, Dv);
+                } else {
+                    for (int64_t d = 0; d < Dv; ++d) {
+                        vf[jj*Dv + d] = nsa_load_f32(v, vr + d*v->nb[0]);
+                    }
+                }
+            }
+
+            for (int64_t g = 0; g < G; ++g) {
+                const float * qg = (const float *) ((const char *) q->data + (h*G + g)*q->nb[1] + t*q->nb[2]);
+                float * ag = acc + g*Dv;
+
+                float mx = M[g];
+                for (int64_t jj = 0; jj < nj; ++jj) {
+                    float dot;
+                    ggml_vec_dot_f32(D, &dot, 0, qg, 0, kf + jj*D, 0, 1);
+                    sc[jj] = scale*dot;
+                    mx = MAX(mx, sc[jj]);
+                }
+
+                const float ms = expf(M[g] - mx);
+                L[g] *= ms;
+                ggml_vec_scale_f32(Dv, ag, ms);
+                for (int64_t jj = 0; jj < nj; ++jj) {
+                    const float e = expf(sc[jj] - mx);
+                    L[g] += e;
+                    ggml_vec_mad_f32(Dv, ag, vf + jj*Dv, e);
+                }
+                M[g] = mx;
+            }
+        }
+
+        for (int64_t g = 0; g < G; ++g) {
+            float * o = (float *) dst->data + (t*Hq + h*G + g)*Dv;
+            const float inv = L[g] > 0.0f ? 1.0f/L[g] : 0.0f;
+            for (int64_t d = 0; d < Dv; ++d) {
+                o[d] = acc[g*Dv + d]*inv;
             }
         }
     }

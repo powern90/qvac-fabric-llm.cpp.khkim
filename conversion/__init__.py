@@ -260,6 +260,7 @@ TEXT_MODEL_MAP: dict[str, str] = {
     "Qwen3TTSForConditionalGeneration": "qwen3tts",
     "Qwen3VLForConditionalGeneration": "qwen3vl",
     "Qwen3VLMoeForConditionalGeneration": "qwen3vl",
+    "HybridGatedDeltaNetForCausalLM": "gdn_nsa",
     "Qwen3_5ForCausalLM": "qwen",
     "Qwen3_5ForConditionalGeneration": "qwen",
     "Qwen3_5MoeForCausalLM": "qwen",

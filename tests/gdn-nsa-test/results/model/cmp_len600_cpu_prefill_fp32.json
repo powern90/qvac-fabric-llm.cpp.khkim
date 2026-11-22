@@ -1,0 +1,29 @@
+{
+ "label": "len600 cpu_prefill vs fp32-ref",
+ "logits": {
+  "T": 600,
+  "max_abs": 0.0031806230545043945,
+  "mean_abs": 0.0001708691706880927,
+  "kl_mean": 2.5501056014728764e-08,
+  "kl_max": 4.824560261968254e-07,
+  "top1_agree": 1.0,
+  "argmax_pos_max_abs": 538,
+  "band_0_512": {
+   "max_abs": 0.0025734901428222656,
+   "kl_mean": 2.5507299199201454e-08,
+   "top1": 1.0
+  },
+  "band_512_1024": {
+   "max_abs": 0.0031806230545043945,
+   "kl_mean": 2.5464732032342207e-08,
+   "top1": 1.0
+  }
+ },
+ "blocks": {
+  "sets": 14400,
+  "exact_set_agree": 1.0,
+  "mean_overlap": 1.0,
+  "n_mismatch": 0,
+  "first_mismatches": []
+ }
+}

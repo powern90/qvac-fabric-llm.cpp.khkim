@@ -17,3 +17,17 @@ turbovec-golden-gen/*.tmp.tv
 ggml-common.h
 **/*.swp
 !peg-parser
+
+# gdn-nsa validation suite (report, test code, scripts, result summaries)
+!gdn-nsa-test/
+!gdn-nsa-test/**
+gdn-nsa-test/**/__pycache__/
+# but never run outputs or build products inside the suite
+gdn-nsa-test/**/*.bin
+gdn-nsa-test/**/*.log
+gdn-nsa-test/**/*.npy
+gdn-nsa-test/**/*.gguf
+gdn-nsa-test/**/*.o
+gdn-nsa-test/**/*.swp
+gdn-nsa-test/**/build*/
+gdn-nsa-test/**/*.ko.md

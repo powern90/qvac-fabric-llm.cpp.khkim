@@ -2862,6 +2862,7 @@ uint32_t llama_context::graph_max_nodes(uint32_t n_tokens) const {
         // the 128-slot looped graph needs roughly one stack per token budget
         res = std::max<uint32_t>(n_tokens * 80, 64u * model.n_tensors());
     } else if (model.arch == LLM_ARCH_QWEN3NEXT ||
+        model.arch == LLM_ARCH_GDN_NSA ||
         model.arch == LLM_ARCH_KIMI_LINEAR ||
         model.arch == LLM_ARCH_BAILINGMOE3 ||
         model.arch == LLM_ARCH_QWEN35 ||
@@ -4616,6 +4617,24 @@ llama_context * llama_init_from_model(
     if ((model->hparams.is_mla() || model->arch == LLM_ARCH_DEEPSEEK4 || model->arch == LLM_ARCH_DEEPSEEK41) && params.type_k != params.type_v) {
         LLAMA_LOG_ERROR("%s: model does not support different K (%s) and V (%s) cache types\n", __func__, ggml_type_name(params.type_k), ggml_type_name(params.type_v));
         return nullptr;
+    }
+
+    if (model->arch == LLM_ARCH_GDN_NSA) {
+        // the NSA kernels read the K/V cache directly; the pairs with a CUDA kernel are F16/F32 x F16/F32 and
+        // F16/Q8_0/Q4_0 x F16/Q8_0/Q4_0 (an F32 + quantized pair would silently run the NSA ops on the CPU)
+        auto fp = [](ggml_type t) { return t == GGML_TYPE_F16 || t == GGML_TYPE_F32; };
+        auto lp = [](ggml_type t) { return t == GGML_TYPE_F16 || t == GGML_TYPE_Q8_0 || t == GGML_TYPE_Q4_0; };
+        if (!((fp(params.type_k) && fp(params.type_v)) || (lp(params.type_k) && lp(params.type_v)))) {
+            LLAMA_LOG_ERROR("%s: gdn-nsa supports K/V cache types F16/F32, or F16/Q8_0/Q4_0 (got K = %s, V = %s)\n", __func__,
+                    ggml_type_name(params.type_k), ggml_type_name(params.type_v));
+            return nullptr;
+        }
+        // the NSA block math reads KV cell b*block_size + i as the token at that position (cell == position), which only
+        // holds for a single sequence (the graph asserts this as well; this check turns it into an error, not an abort)
+        if (params.n_seq_max > 1) {
+            LLAMA_LOG_ERROR("%s: gdn-nsa supports a single sequence only (got n_seq_max = %u)\n", __func__, params.n_seq_max);
+            return nullptr;
+        }
     }
 
     if (ggml_is_quantized(params.type_v) && params.flash_attn_type != LLAMA_FLASH_ATTN_TYPE_ENABLED) {

@@ -2277,6 +2277,14 @@ static void ggml_compute_forward(struct ggml_compute_params * params, struct ggm
             {
                 ggml_compute_forward_lightning_indexer(params, tensor);
             } break;
+        case GGML_OP_NSA_SELECT:
+            {
+                ggml_compute_forward_nsa_select(params, tensor);
+            } break;
+        case GGML_OP_NSA_SEL_ATTN:
+            {
+                ggml_compute_forward_nsa_sel_attn(params, tensor);
+            } break;
         case GGML_OP_DSV4_HC_COMB:
             {
                 ggml_compute_forward_dsv4_hc_comb(params, tensor);
@@ -2648,6 +2656,8 @@ static int ggml_get_n_tasks(struct ggml_tensor * node, int n_threads) {
         case GGML_OP_SSM_CONV_BACK_C:
         case GGML_OP_SSM_SCAN:
         case GGML_OP_LIGHTNING_INDEXER:
+        case GGML_OP_NSA_SELECT:
+        case GGML_OP_NSA_SEL_ATTN:
             {
                 n_tasks = n_threads;
             } break;
@@ -3272,6 +3282,19 @@ struct ggml_cplan ggml_graph_plan(
                         // temp buffer for dequantizing lightning indexer keys
                         const int64_t ne10 = node->src[1]->ne[0];
                         cur += sizeof(float)*ne10*n_tasks;
+                    } break;
+                case GGML_OP_NSA_SELECT:
+                    {
+                        const int64_t NB = node->src[1]->ne[2];
+                        cur = sizeof(float)*(2*NB + 3 + CACHE_LINE_SIZE_F32)*n_tasks;
+                    } break;
+                case GGML_OP_NSA_SEL_ATTN:
+                    {
+                        const int64_t bs = ggml_get_op_params_i32(node, 0);
+                        const int64_t D  = node->src[0]->ne[0];
+                        const int64_t G  = node->src[0]->ne[1] / node->src[1]->ne[1];
+                        const int64_t Dv = node->src[2]->ne[0];
+                        cur = sizeof(float)*(bs*(D + Dv + 1) + G*(Dv + 2) + CACHE_LINE_SIZE_F32)*n_tasks;
                     } break;
                 default:
                     break;

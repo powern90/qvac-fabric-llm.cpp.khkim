@@ -1,0 +1,139 @@
+ggml_cuda_init: found 1 CUDA devices (Total VRAM: 182624 MiB):
+  Device 0: NVIDIA B200, compute capability 10.0, VMM: yes, VRAM: 182624 MiB
+Testing 2 devices
+
+Backend 1/2: CUDA0
+  Device description: NVIDIA B200
+  Device memory: 182624 MB (181998 MB free)
+
+  NSA_SELECT(Hq=32,Hkv=2,D=64,bs=64,n_sel=16,NB=64,T=512,N0=3584): OK
+  NSA_SELECT(Hq=32,Hkv=2,D=64,bs=64,n_sel=16,NB=64,T=1,N0=4095): OK
+  NSA_SELECT(Hq=32,Hkv=2,D=64,bs=64,n_sel=16,NB=64,T=7,N0=2000): OK
+  NSA_SELECT(Hq=32,Hkv=2,D=64,bs=64,n_sel=16,NB=2,T=100,N0=0): OK
+  NSA_SELECT(Hq=32,Hkv=2,D=64,bs=64,n_sel=16,NB=6,T=33,N0=300): OK
+  NSA_SELECT(Hq=16,Hkv=1,D=64,bs=64,n_sel=16,NB=32,T=64,N0=1984): OK
+  NSA_SELECT(Hq=8,Hkv=2,D=128,bs=32,n_sel=8,NB=38,T=20,N0=1200): OK
+  NSA_SELECT(Hq=48,Hkv=1,D=32,bs=16,n_sel=4,NB=20,T=5,N0=250): OK
+  8/8 tests passed
+  Backend CUDA0: OK
+Backend 2/2: CPU
+  Skipping
+2/2 backends passed
+OK
+ggml_cuda_init: found 1 CUDA devices (Total VRAM: 182624 MiB):
+  Device 0: NVIDIA B200, compute capability 10.0, VMM: yes, VRAM: 182624 MiB
+Testing 2 devices
+
+Backend 1/2: CUDA0
+  Device description: NVIDIA B200
+  Device memory: 182624 MB (181998 MB free)
+
+  NSA_SEL_ATTN(type_kv=f16,type_v=f16,D=64,Dv=64,Hq=32,Hkv=2,bs=64,S=16,N=4096,T=1,v_trans=0,window=0): OK
+  NSA_SEL_ATTN(type_kv=f16,type_v=f16,D=64,Dv=64,Hq=32,Hkv=2,bs=64,S=16,N=4096,T=7,v_trans=0,window=0): OK
+  NSA_SEL_ATTN(type_kv=f16,type_v=f16,D=64,Dv=64,Hq=32,Hkv=2,bs=64,S=16,N=4096,T=512,v_trans=0,window=0): OK
+  NSA_SEL_ATTN(type_kv=f16,type_v=f16,D=64,Dv=64,Hq=32,Hkv=2,bs=64,S=16,N=4096,T=33,v_trans=1,window=0): OK
+  NSA_SEL_ATTN(type_kv=f16,type_v=f16,D=64,Dv=64,Hq=32,Hkv=2,bs=64,S=16,N=4000,T=7,v_trans=0,window=0): OK
+  NSA_SEL_ATTN(type_kv=f16,type_v=f16,D=64,Dv=64,Hq=32,Hkv=2,bs=64,S=16,N=4000,T=100,v_trans=1,window=0): OK
+  NSA_SEL_ATTN(type_kv=f32,type_v=f32,D=64,Dv=64,Hq=32,Hkv=2,bs=64,S=16,N=4096,T=1,v_trans=0,window=0): OK
+  NSA_SEL_ATTN(type_kv=f32,type_v=f32,D=64,Dv=64,Hq=32,Hkv=2,bs=64,S=16,N=4096,T=7,v_trans=0,window=0): OK
+  NSA_SEL_ATTN(type_kv=f32,type_v=f32,D=64,Dv=64,Hq=32,Hkv=2,bs=64,S=16,N=4096,T=512,v_trans=0,window=0): OK
+  NSA_SEL_ATTN(type_kv=f32,type_v=f32,D=64,Dv=64,Hq=32,Hkv=2,bs=64,S=16,N=4096,T=33,v_trans=1,window=0): OK
+  NSA_SEL_ATTN(type_kv=f32,type_v=f32,D=64,Dv=64,Hq=32,Hkv=2,bs=64,S=16,N=4000,T=7,v_trans=0,window=0): OK
+  NSA_SEL_ATTN(type_kv=f32,type_v=f32,D=64,Dv=64,Hq=32,Hkv=2,bs=64,S=16,N=4000,T=100,v_trans=1,window=0): OK
+  NSA_SEL_ATTN(type_kv=f16,type_v=f16,D=64,Dv=64,Hq=16,Hkv=1,bs=64,S=16,N=2048,T=64,v_trans=0,window=0): OK
+  NSA_SEL_ATTN(type_kv=f16,type_v=f16,D=128,Dv=96,Hq=8,Hkv=2,bs=32,S=8,N=1000,T=13,v_trans=0,window=0): OK
+  NSA_SEL_ATTN(type_kv=f16,type_v=f16,D=128,Dv=96,Hq=8,Hkv=2,bs=32,S=8,N=1000,T=13,v_trans=1,window=0): OK
+  NSA_SEL_ATTN(type_kv=f32,type_v=f32,D=32,Dv=32,Hq=48,Hkv=1,bs=16,S=4,N=300,T=5,v_trans=0,window=0): OK
+  NSA_SEL_ATTN(type_kv=f32,type_v=f32,D=128,Dv=128,Hq=4,Hkv=4,bs=128,S=4,N=700,T=9,v_trans=0,window=0): OK
+  NSA_SEL_ATTN(type_kv=f16,type_v=f16,D=64,Dv=64,Hq=32,Hkv=2,bs=64,S=16,N=4096,T=1,v_trans=0,window=0): OK
+  NSA_SEL_ATTN(type_kv=f16,type_v=f16,D=64,Dv=64,Hq=32,Hkv=2,bs=64,S=16,N=4096,T=1,v_trans=1,window=0): OK
+  NSA_SEL_ATTN(type_kv=f16,type_v=f16,D=64,Dv=64,Hq=32,Hkv=2,bs=64,S=16,N=4096,T=4,v_trans=0,window=0): OK
+  NSA_SEL_ATTN(type_kv=f16,type_v=f16,D=64,Dv=64,Hq=32,Hkv=2,bs=64,S=16,N=4096,T=4,v_trans=1,window=0): OK
+  NSA_SEL_ATTN(type_kv=f16,type_v=f16,D=64,Dv=64,Hq=32,Hkv=2,bs=64,S=16,N=32768,T=1,v_trans=0,window=0): OK
+  NSA_SEL_ATTN(type_kv=f16,type_v=f16,D=64,Dv=64,Hq=32,Hkv=2,bs=64,S=16,N=32768,T=1,v_trans=1,window=0): OK
+  NSA_SEL_ATTN(type_kv=f16,type_v=f16,D=64,Dv=64,Hq=32,Hkv=2,bs=64,S=16,N=32768,T=4,v_trans=0,window=0): OK
+  NSA_SEL_ATTN(type_kv=f16,type_v=f16,D=64,Dv=64,Hq=32,Hkv=2,bs=64,S=16,N=32768,T=4,v_trans=1,window=0): OK
+  NSA_SEL_ATTN(type_kv=f16,type_v=f16,D=64,Dv=64,Hq=32,Hkv=2,bs=64,S=16,N=4000,T=1,v_trans=0,window=0): OK
+  NSA_SEL_ATTN(type_kv=f16,type_v=f16,D=64,Dv=64,Hq=32,Hkv=2,bs=64,S=64,N=32768,T=1,v_trans=0,window=0): OK
+  NSA_SEL_ATTN(type_kv=f32,type_v=f32,D=64,Dv=64,Hq=32,Hkv=2,bs=64,S=16,N=4096,T=1,v_trans=0,window=0): OK
+  NSA_SEL_ATTN(type_kv=f32,type_v=f32,D=64,Dv=64,Hq=32,Hkv=2,bs=64,S=16,N=4096,T=1,v_trans=1,window=0): OK
+  NSA_SEL_ATTN(type_kv=f32,type_v=f32,D=64,Dv=64,Hq=32,Hkv=2,bs=64,S=16,N=4096,T=4,v_trans=0,window=0): OK
+  NSA_SEL_ATTN(type_kv=f32,type_v=f32,D=64,Dv=64,Hq=32,Hkv=2,bs=64,S=16,N=4096,T=4,v_trans=1,window=0): OK
+  NSA_SEL_ATTN(type_kv=f32,type_v=f32,D=64,Dv=64,Hq=32,Hkv=2,bs=64,S=16,N=32768,T=1,v_trans=0,window=0): OK
+  NSA_SEL_ATTN(type_kv=f32,type_v=f32,D=64,Dv=64,Hq=32,Hkv=2,bs=64,S=16,N=32768,T=1,v_trans=1,window=0): OK
+  NSA_SEL_ATTN(type_kv=f32,type_v=f32,D=64,Dv=64,Hq=32,Hkv=2,bs=64,S=16,N=32768,T=4,v_trans=0,window=0): OK
+  NSA_SEL_ATTN(type_kv=f32,type_v=f32,D=64,Dv=64,Hq=32,Hkv=2,bs=64,S=16,N=32768,T=4,v_trans=1,window=0): OK
+  NSA_SEL_ATTN(type_kv=f32,type_v=f32,D=64,Dv=64,Hq=32,Hkv=2,bs=64,S=16,N=4000,T=1,v_trans=0,window=0): OK
+  NSA_SEL_ATTN(type_kv=f32,type_v=f32,D=64,Dv=64,Hq=32,Hkv=2,bs=64,S=64,N=32768,T=1,v_trans=0,window=0): OK
+  NSA_SEL_ATTN(type_kv=f16,type_v=f16,D=128,Dv=96,Hq=8,Hkv=2,bs=32,S=8,N=1000,T=1,v_trans=1,window=0): OK
+  NSA_SEL_ATTN(type_kv=f32,type_v=f32,D=32,Dv=32,Hq=48,Hkv=1,bs=16,S=4,N=300,T=1,v_trans=0,window=0): OK
+  NSA_SEL_ATTN(type_kv=f32,type_v=f32,D=128,Dv=128,Hq=4,Hkv=4,bs=128,S=4,N=700,T=2,v_trans=0,window=0): OK
+  NSA_SEL_ATTN(type_kv=f16,type_v=f16,D=64,Dv=64,Hq=6,Hkv=2,bs=64,S=16,N=4096,T=1,v_trans=0,window=0): OK
+  NSA_SEL_ATTN(type_kv=f16,type_v=f16,D=64,Dv=64,Hq=18,Hkv=1,bs=64,S=16,N=4096,T=7,v_trans=0,window=0): OK
+  NSA_SEL_ATTN(type_kv=f16,type_v=f16,D=128,Dv=128,Hq=64,Hkv=1,bs=64,S=16,N=4096,T=7,v_trans=0,window=0): OK
+  NSA_SEL_ATTN(type_kv=f16,type_v=f16,D=64,Dv=64,Hq=68,Hkv=1,bs=64,S=16,N=4096,T=1,v_trans=0,window=0): OK
+  NSA_SEL_ATTN(type_kv=f16,type_v=f16,D=64,Dv=64,Hq=32,Hkv=2,bs=64,S=16,N=4096,T=1,v_trans=0,window=512): OK
+  NSA_SEL_ATTN(type_kv=f16,type_v=f16,D=64,Dv=64,Hq=32,Hkv=2,bs=64,S=16,N=4096,T=7,v_trans=0,window=512): OK
+  NSA_SEL_ATTN(type_kv=f16,type_v=f16,D=64,Dv=64,Hq=32,Hkv=2,bs=64,S=16,N=4096,T=512,v_trans=0,window=512): OK
+  NSA_SEL_ATTN(type_kv=f16,type_v=f16,D=64,Dv=64,Hq=32,Hkv=2,bs=64,S=16,N=4000,T=100,v_trans=1,window=512): OK
+  NSA_SEL_ATTN(type_kv=f16,type_v=f16,D=64,Dv=64,Hq=32,Hkv=2,bs=64,S=16,N=4096,T=33,v_trans=0,window=100): OK
+  NSA_SEL_ATTN(type_kv=f16,type_v=f16,D=64,Dv=64,Hq=32,Hkv=2,bs=64,S=16,N=32768,T=1,v_trans=1,window=512): OK
+  NSA_SEL_ATTN(type_kv=f32,type_v=f32,D=64,Dv=64,Hq=32,Hkv=2,bs=64,S=16,N=4096,T=1,v_trans=0,window=512): OK
+  NSA_SEL_ATTN(type_kv=f32,type_v=f32,D=64,Dv=64,Hq=32,Hkv=2,bs=64,S=16,N=4096,T=7,v_trans=0,window=512): OK
+  NSA_SEL_ATTN(type_kv=f32,type_v=f32,D=64,Dv=64,Hq=32,Hkv=2,bs=64,S=16,N=4096,T=512,v_trans=0,window=512): OK
+  NSA_SEL_ATTN(type_kv=f32,type_v=f32,D=64,Dv=64,Hq=32,Hkv=2,bs=64,S=16,N=4000,T=100,v_trans=1,window=512): OK
+  NSA_SEL_ATTN(type_kv=f32,type_v=f32,D=64,Dv=64,Hq=32,Hkv=2,bs=64,S=16,N=4096,T=33,v_trans=0,window=100): OK
+  NSA_SEL_ATTN(type_kv=f32,type_v=f32,D=64,Dv=64,Hq=32,Hkv=2,bs=64,S=16,N=32768,T=1,v_trans=1,window=512): OK
+  NSA_SEL_ATTN(type_kv=f16,type_v=f16,D=128,Dv=96,Hq=8,Hkv=2,bs=32,S=8,N=1000,T=13,v_trans=0,window=70): OK
+  NSA_SEL_ATTN(type_kv=q8_0,type_v=q8_0,D=64,Dv=64,Hq=32,Hkv=2,bs=64,S=16,N=4096,T=1,v_trans=0,window=0): OK
+  NSA_SEL_ATTN(type_kv=q8_0,type_v=q8_0,D=64,Dv=64,Hq=32,Hkv=2,bs=64,S=16,N=4096,T=4,v_trans=0,window=0): OK
+  NSA_SEL_ATTN(type_kv=q8_0,type_v=q8_0,D=64,Dv=64,Hq=32,Hkv=2,bs=64,S=16,N=4096,T=7,v_trans=0,window=0): OK
+  NSA_SEL_ATTN(type_kv=q8_0,type_v=q8_0,D=64,Dv=64,Hq=32,Hkv=2,bs=64,S=16,N=4096,T=512,v_trans=0,window=0): OK
+  NSA_SEL_ATTN(type_kv=q8_0,type_v=q8_0,D=64,Dv=64,Hq=32,Hkv=2,bs=64,S=16,N=32768,T=1,v_trans=0,window=0): OK
+  NSA_SEL_ATTN(type_kv=q8_0,type_v=q8_0,D=64,Dv=64,Hq=32,Hkv=2,bs=64,S=16,N=4000,T=100,v_trans=0,window=0): OK
+  NSA_SEL_ATTN(type_kv=q8_0,type_v=f16,D=64,Dv=64,Hq=32,Hkv=2,bs=64,S=16,N=4096,T=33,v_trans=1,window=0): OK
+  NSA_SEL_ATTN(type_kv=q8_0,type_v=q8_0,D=64,Dv=64,Hq=32,Hkv=2,bs=64,S=16,N=4096,T=7,v_trans=0,window=512): OK
+  NSA_SEL_ATTN(type_kv=q8_0,type_v=q8_0,D=64,Dv=64,Hq=32,Hkv=2,bs=64,S=16,N=32768,T=1,v_trans=0,window=512): OK
+  NSA_SEL_ATTN(type_kv=q8_0,type_v=q8_0,D=64,Dv=64,Hq=32,Hkv=2,bs=64,S=16,N=4096,T=33,v_trans=0,window=100): OK
+  NSA_SEL_ATTN(type_kv=q8_0,type_v=q8_0,D=128,Dv=96,Hq=8,Hkv=2,bs=32,S=8,N=1000,T=13,v_trans=0,window=0): OK
+  NSA_SEL_ATTN(type_kv=q8_0,type_v=q8_0,D=64,Dv=64,Hq=18,Hkv=1,bs=64,S=16,N=4096,T=7,v_trans=0,window=0): OK
+  NSA_SEL_ATTN(type_kv=q8_0,type_v=q8_0,D=64,Dv=64,Hq=68,Hkv=1,bs=64,S=16,N=4096,T=1,v_trans=0,window=0): OK
+  NSA_SEL_ATTN(type_kv=q4_0,type_v=q4_0,D=64,Dv=64,Hq=32,Hkv=2,bs=64,S=16,N=4096,T=1,v_trans=0,window=0): OK
+  NSA_SEL_ATTN(type_kv=q4_0,type_v=q4_0,D=64,Dv=64,Hq=32,Hkv=2,bs=64,S=16,N=4096,T=4,v_trans=0,window=0): OK
+  NSA_SEL_ATTN(type_kv=q4_0,type_v=q4_0,D=64,Dv=64,Hq=32,Hkv=2,bs=64,S=16,N=4096,T=7,v_trans=0,window=0): OK
+  NSA_SEL_ATTN(type_kv=q4_0,type_v=q4_0,D=64,Dv=64,Hq=32,Hkv=2,bs=64,S=16,N=4096,T=512,v_trans=0,window=0): OK
+  NSA_SEL_ATTN(type_kv=q4_0,type_v=q4_0,D=64,Dv=64,Hq=32,Hkv=2,bs=64,S=16,N=32768,T=1,v_trans=0,window=0): OK
+  NSA_SEL_ATTN(type_kv=q4_0,type_v=q4_0,D=64,Dv=64,Hq=32,Hkv=2,bs=64,S=16,N=4000,T=100,v_trans=0,window=0): OK
+  NSA_SEL_ATTN(type_kv=q4_0,type_v=f16,D=64,Dv=64,Hq=32,Hkv=2,bs=64,S=16,N=4096,T=33,v_trans=1,window=0): OK
+  NSA_SEL_ATTN(type_kv=q4_0,type_v=q4_0,D=64,Dv=64,Hq=32,Hkv=2,bs=64,S=16,N=4096,T=7,v_trans=0,window=512): OK
+  NSA_SEL_ATTN(type_kv=q4_0,type_v=q4_0,D=64,Dv=64,Hq=32,Hkv=2,bs=64,S=16,N=32768,T=1,v_trans=0,window=512): OK
+  NSA_SEL_ATTN(type_kv=q4_0,type_v=q4_0,D=64,Dv=64,Hq=32,Hkv=2,bs=64,S=16,N=4096,T=33,v_trans=0,window=100): OK
+  NSA_SEL_ATTN(type_kv=q4_0,type_v=q4_0,D=128,Dv=96,Hq=8,Hkv=2,bs=32,S=8,N=1000,T=13,v_trans=0,window=0): OK
+  NSA_SEL_ATTN(type_kv=q4_0,type_v=q4_0,D=64,Dv=64,Hq=18,Hkv=1,bs=64,S=16,N=4096,T=7,v_trans=0,window=0): OK
+  NSA_SEL_ATTN(type_kv=q4_0,type_v=q4_0,D=64,Dv=64,Hq=68,Hkv=1,bs=64,S=16,N=4096,T=1,v_trans=0,window=0): OK
+  NSA_SEL_ATTN(type_kv=q8_0,type_v=f16,D=64,Dv=64,Hq=32,Hkv=2,bs=64,S=16,N=4096,T=1,v_trans=0,window=0): OK
+  NSA_SEL_ATTN(type_kv=q8_0,type_v=f16,D=64,Dv=64,Hq=32,Hkv=2,bs=64,S=16,N=4096,T=7,v_trans=0,window=0): OK
+  NSA_SEL_ATTN(type_kv=q8_0,type_v=f16,D=64,Dv=64,Hq=32,Hkv=2,bs=64,S=16,N=4096,T=7,v_trans=0,window=512): OK
+  NSA_SEL_ATTN(type_kv=f16,type_v=q8_0,D=64,Dv=64,Hq=32,Hkv=2,bs=64,S=16,N=4096,T=1,v_trans=0,window=0): OK
+  NSA_SEL_ATTN(type_kv=f16,type_v=q8_0,D=64,Dv=64,Hq=32,Hkv=2,bs=64,S=16,N=4096,T=7,v_trans=0,window=0): OK
+  NSA_SEL_ATTN(type_kv=f16,type_v=q8_0,D=64,Dv=64,Hq=32,Hkv=2,bs=64,S=16,N=4096,T=7,v_trans=0,window=512): OK
+  NSA_SEL_ATTN(type_kv=q4_0,type_v=f16,D=64,Dv=64,Hq=32,Hkv=2,bs=64,S=16,N=4096,T=1,v_trans=0,window=0): OK
+  NSA_SEL_ATTN(type_kv=q4_0,type_v=f16,D=64,Dv=64,Hq=32,Hkv=2,bs=64,S=16,N=4096,T=7,v_trans=0,window=0): OK
+  NSA_SEL_ATTN(type_kv=q4_0,type_v=f16,D=64,Dv=64,Hq=32,Hkv=2,bs=64,S=16,N=4096,T=7,v_trans=0,window=512): OK
+  NSA_SEL_ATTN(type_kv=f16,type_v=q4_0,D=64,Dv=64,Hq=32,Hkv=2,bs=64,S=16,N=4096,T=1,v_trans=0,window=0): OK
+  NSA_SEL_ATTN(type_kv=f16,type_v=q4_0,D=64,Dv=64,Hq=32,Hkv=2,bs=64,S=16,N=4096,T=7,v_trans=0,window=0): OK
+  NSA_SEL_ATTN(type_kv=f16,type_v=q4_0,D=64,Dv=64,Hq=32,Hkv=2,bs=64,S=16,N=4096,T=7,v_trans=0,window=512): OK
+  NSA_SEL_ATTN(type_kv=q8_0,type_v=q4_0,D=64,Dv=64,Hq=32,Hkv=2,bs=64,S=16,N=4096,T=1,v_trans=0,window=0): OK
+  NSA_SEL_ATTN(type_kv=q8_0,type_v=q4_0,D=64,Dv=64,Hq=32,Hkv=2,bs=64,S=16,N=4096,T=7,v_trans=0,window=0): OK
+  NSA_SEL_ATTN(type_kv=q8_0,type_v=q4_0,D=64,Dv=64,Hq=32,Hkv=2,bs=64,S=16,N=4096,T=7,v_trans=0,window=512): OK
+  NSA_SEL_ATTN(type_kv=q4_0,type_v=q8_0,D=64,Dv=64,Hq=32,Hkv=2,bs=64,S=16,N=4096,T=1,v_trans=0,window=0): OK
+  NSA_SEL_ATTN(type_kv=q4_0,type_v=q8_0,D=64,Dv=64,Hq=32,Hkv=2,bs=64,S=16,N=4096,T=7,v_trans=0,window=0): OK
+  NSA_SEL_ATTN(type_kv=q4_0,type_v=q8_0,D=64,Dv=64,Hq=32,Hkv=2,bs=64,S=16,N=4096,T=7,v_trans=0,window=512): OK
+  NSA_SEL_ATTN(type_kv=f32,type_v=q8_0,D=64,Dv=64,Hq=32,Hkv=2,bs=64,S=16,N=4096,T=7,v_trans=0,window=0): not supported [CUDA0] 
+  NSA_SEL_ATTN(type_kv=q4_0,type_v=f32,D=64,Dv=64,Hq=32,Hkv=2,bs=64,S=16,N=4096,T=7,v_trans=0,window=0): not supported [CUDA0] 
+  101/101 tests passed
+  Backend CUDA0: OK
+Backend 2/2: CPU
+  Skipping
+2/2 backends passed
+OK

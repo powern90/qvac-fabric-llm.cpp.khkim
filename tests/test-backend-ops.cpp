@@ -6608,6 +6608,296 @@ struct test_gdn_conv_deferred : public test_case {
     }
 };
 
+// GGML_OP_NSA_SELECT
+struct test_nsa_select : public test_case {
+    const int64_t Hq;
+    const int64_t Hkv;
+    const int64_t D;
+    const int     bs;
+    const int     n_sel;
+    const int64_t NB;
+    const int64_t T;
+    const int64_t N0; // position of the first query
+
+    ggml_tensor * q     = nullptr;
+    ggml_tensor * k_cmp = nullptr;
+
+    std::string vars() override {
+        return VARS_TO_STR8(Hq, Hkv, D, bs, n_sel, NB, T, N0);
+    }
+
+    test_nsa_select(int64_t Hq = 32, int64_t Hkv = 2, int64_t D = 64, int bs = 64, int n_sel = 16, int64_t NB = 64, int64_t T = 7, int64_t N0 = 2000)
+        : Hq(Hq), Hkv(Hkv), D(D), bs(bs), n_sel(n_sel), NB(NB), T(T), N0(N0) {}
+
+    ggml_tensor * build_graph(ggml_context * ctx) override {
+        q     = ggml_new_tensor_3d(ctx, GGML_TYPE_F32, D, Hq, T);
+        k_cmp = ggml_new_tensor_3d(ctx, GGML_TYPE_F32, D, Hkv, NB);
+        ggml_tensor * pos = ggml_new_tensor_1d(ctx, GGML_TYPE_I32, T);
+        ggml_set_name(q, "q");
+        ggml_set_name(k_cmp, "k_cmp");
+        ggml_set_name(pos, "pos");
+
+        ggml_tensor * out = ggml_nsa_select(ctx, q, k_cmp, pos, bs, n_sel, 1.0f/sqrtf((float) D));
+        ggml_set_name(out, "out");
+        return out;
+    }
+
+    void initialize_tensors(ggml_context * ctx) override {
+        for (ggml_tensor * t = ggml_get_first_tensor(ctx); t != nullptr; t = ggml_get_next_tensor(ctx, t)) {
+            if (strcmp(t->name, "pos") == 0) {
+                std::vector<int32_t> pos(T);
+                for (int64_t i = 0; i < T; ++i) {
+                    pos[i] = (int32_t) (N0 + i);
+                }
+                ggml_backend_tensor_set(t, pos.data(), 0, ggml_nbytes(t));
+            } else {
+                init_tensor_uniform(t);
+            }
+        }
+    }
+
+    double max_err() override {
+        return 0.0;
+    }
+
+    // the output is discrete and a near-tie of two block scores may resolve differently between backends.
+    // so each row is checked against a double precision host reference of the scores: valid candidates,
+    // no duplicates, a top n_sel set in descending order, exact ties (the forced blocks) in ascending block order,
+    // and the same score as the other backend in each slot (tol 1e-5).
+    // the result is the number of bad slots/rows.
+    double err(const float * a, const float * b, size_t n) override {
+        const bool same = memcmp(a, b, n*sizeof(float)) == 0;
+        bool is_out = n == (size_t) (n_sel*Hkv*T);
+        for (size_t i = 0; is_out && i < n; ++i) {
+            is_out = a[i] == std::floor(a[i]) && b[i] == std::floor(b[i]);
+        }
+        if (!is_out) {
+            return same ? 0.0 : 1e9;
+        }
+
+        const int64_t G = Hq / Hkv;
+        std::vector<float> qd(ggml_nelements(q));
+        std::vector<float> kd(ggml_nelements(k_cmp));
+        ggml_backend_tensor_get(q, qd.data(), 0, ggml_nbytes(q));
+        ggml_backend_tensor_get(k_cmp, kd.data(), 0, ggml_nbytes(k_cmp));
+
+        const double tol   = 1e-5;
+        const double scale = 1.0/std::sqrt((double) D);
+
+        double nbad = 0.0;
+        std::vector<double> sc;
+        std::vector<double> lg;
+        for (int64_t t = 0; t < T; ++t) {
+            const int64_t p     = N0 + t;
+            const int64_t cur   = p / bs;
+            const int64_t n_cmp = std::min<int64_t>(NB, (p + 1) / bs);
+
+            for (int64_t h = 0; h < Hkv; ++h) {
+                // -2: not a candidate
+                sc.assign(cur + 1, -2.0);
+                for (int64_t bi = 0; bi < n_cmp; ++bi) {
+                    sc[bi] = 0.0;
+                }
+                lg.assign(n_cmp, 0.0);
+                for (int64_t g = 0; g < G; ++g) {
+                    const float * qg = qd.data() + (t*Hq + h*G + g)*D;
+                    double mx = -INFINITY;
+                    for (int64_t bi = 0; bi < n_cmp; ++bi) {
+                        const float * kb = kd.data() + (bi*Hkv + h)*D;
+                        double dot = 0.0;
+                        for (int64_t d = 0; d < D; ++d) {
+                            dot += (double) qg[d]*kb[d];
+                        }
+                        lg[bi] = scale*dot;
+                        mx = std::max(mx, lg[bi]);
+                    }
+                    double sum = 0.0;
+                    for (int64_t bi = 0; bi < n_cmp; ++bi) {
+                        lg[bi] = std::exp(lg[bi] - mx);
+                        sum += lg[bi];
+                    }
+                    for (int64_t bi = 0; bi < n_cmp; ++bi) {
+                        sc[bi] += lg[bi]/sum/G;
+                    }
+                }
+                sc[0] = 1.0;
+                sc[cur] = 1.0;
+                if (cur >= 1) {
+                    sc[cur - 1] = 1.0;
+                }
+                int64_t n_cand = 0;
+                for (double s : sc) {
+                    n_cand += s > -1.5;
+                }
+
+                auto score_of = [&](int32_t x) -> double {
+                    if (x == -1) {
+                        return -1.0;
+                    }
+                    return x < 0 || x > cur ? -2.0 : sc[x];
+                };
+
+                const float * ra = a + (t*Hkv + h)*n_sel;
+                const float * rb = b + (t*Hkv + h)*n_sel;
+
+                for (const float * r : { ra, rb }) {
+                    std::vector<bool> taken(cur + 1, false);
+                    double  last = INFINITY;
+                    int32_t prev = -1;
+                    int64_t n_valid = 0;
+                    for (int i = 0; i < n_sel; ++i) {
+                        const int32_t x = (int32_t) r[i];
+                        const double  s = score_of(x);
+                        if (s < -1.5 || (x >= 0 && taken[x]) || (x >= 0 && n_valid != i) || s > last + tol) {
+                            nbad += 1;
+                            continue;
+                        }
+                        if (x >= 0) {
+                            // exact ties of the reference score (the forced blocks, score 1) are broken to the lower block
+                            if (n_valid > 0 && s == last && x < prev) {
+                                nbad += 1;
+                            }
+                            taken[x] = true;
+                            last = s;
+                            prev = x;
+                            n_valid++;
+                        }
+                    }
+                    if (n_valid != std::min<int64_t>(n_sel, n_cand)) {
+                        nbad += 1;
+                    }
+                    for (int64_t bi = 0; bi <= cur; ++bi) {
+                        if (!taken[bi] && sc[bi] > -1.5 && sc[bi] > last + tol) {
+                            nbad += 1;
+                        }
+                    }
+                }
+
+                for (int i = 0; i < n_sel; ++i) {
+                    const double sa = score_of((int32_t) ra[i]);
+                    const double sb = score_of((int32_t) rb[i]);
+                    if (std::fabs(sa - sb) > tol) {
+                        nbad += 1;
+                    }
+                }
+            }
+        }
+        return nbad;
+    }
+};
+
+// GGML_OP_NSA_SEL_ATTN
+struct test_nsa_sel_attn : public test_case {
+    const ggml_type type_kv; // K type (and V type unless type_v is given)
+    const ggml_type type_v;
+    const int64_t D;
+    const int64_t Dv;
+    const int64_t Hq;
+    const int64_t Hkv;
+    const int     bs;
+    const int64_t S;
+    const int64_t N;
+    const int64_t T;
+    const bool    v_trans; // V as a permuted view of a transposed V cache, K as a view of a larger cache
+    const int     window;  // > 0: sliding window lower bound (ggml_nsa_sel_attn_ext)
+
+    std::string vars() override {
+        return VARS_TO_STR12(type_kv, type_v, D, Dv, Hq, Hkv, bs, S, N, T, v_trans, window);
+    }
+
+    test_nsa_sel_attn(ggml_type type_kv = GGML_TYPE_F16, int64_t D = 64, int64_t Dv = 64, int64_t Hq = 32, int64_t Hkv = 2,
+            int bs = 64, int64_t S = 16, int64_t N = 4096, int64_t T = 7, bool v_trans = false, int window = 0,
+            ggml_type type_v = GGML_TYPE_COUNT)
+        : type_kv(type_kv), type_v(type_v == GGML_TYPE_COUNT ? type_kv : type_v), D(D), Dv(Dv), Hq(Hq), Hkv(Hkv), bs(bs), S(S), N(N),
+          T(T), v_trans(v_trans), window(window) {}
+
+    ggml_tensor * build_graph(ggml_context * ctx) override {
+        ggml_tensor * q = ggml_new_tensor_3d(ctx, GGML_TYPE_F32, D, Hq, T);
+        ggml_set_name(q, "q");
+
+        ggml_tensor * k;
+        ggml_tensor * v;
+        if (v_trans) {
+            ggml_tensor * k_cache = ggml_new_tensor_3d(ctx, type_kv, D, Hkv, N + 64);
+            ggml_set_name(k_cache, "k_cache");
+            k = ggml_view_3d(ctx, k_cache, D, Hkv, N, k_cache->nb[1], k_cache->nb[2], 64*k_cache->nb[2]);
+            ggml_set_name(k, "k");
+
+            ggml_tensor * v_t = ggml_new_tensor_3d(ctx, type_v, N, Dv, Hkv);
+            ggml_set_name(v_t, "v_t");
+            v = ggml_permute(ctx, v_t, 2, 0, 1, 3);
+            ggml_set_name(v, "v");
+        } else {
+            k = ggml_new_tensor_3d(ctx, type_kv, D, Hkv, N);
+            v = ggml_new_tensor_3d(ctx, type_v, Dv, Hkv, N);
+            ggml_set_name(k, "k");
+            ggml_set_name(v, "v");
+        }
+
+        ggml_tensor * idx = ggml_new_tensor_3d(ctx, GGML_TYPE_I32, S, Hkv, T);
+        ggml_tensor * pos = ggml_new_tensor_1d(ctx, GGML_TYPE_I32, T);
+        ggml_set_name(idx, "idx");
+        ggml_set_name(pos, "pos");
+
+        ggml_tensor * out = window > 0
+            ? ggml_nsa_sel_attn_ext(ctx, q, k, v, idx, pos, bs, 1.0f/sqrtf((float) D), window)
+            : ggml_nsa_sel_attn(ctx, q, k, v, idx, pos, bs, 1.0f/sqrtf((float) D));
+        ggml_set_name(out, "out");
+        return out;
+    }
+
+    void initialize_tensors(ggml_context * ctx) override {
+        std::mt19937 rng(1234);
+
+        // a prefill chunk at the end of the context
+        std::vector<int32_t> pos(T);
+        for (int64_t i = 0; i < T; ++i) {
+            pos[i] = (int32_t) (N - T + i);
+        }
+
+        for (ggml_tensor * t = ggml_get_first_tensor(ctx); t != nullptr; t = ggml_get_next_tensor(ctx, t)) {
+            if (strcmp(t->name, "pos") == 0) {
+                ggml_backend_tensor_set(t, pos.data(), 0, ggml_nbytes(t));
+            } else if (strcmp(t->name, "idx") == 0) {
+                // distinct blocks <= cur, always cur, some -1 padding, in random slot order. some rows are all -1.
+                std::vector<int32_t> idx(S*Hkv*T, -1);
+                for (int64_t it = 0; it < T; ++it) {
+                    const int32_t cur = pos[it] / bs;
+                    for (int64_t h = 0; h < Hkv; ++h) {
+                        int32_t * row = idx.data() + (it*Hkv + h)*S;
+                        std::vector<int32_t> cand(cur);
+                        for (int32_t c = 0; c < cur; ++c) {
+                            cand[c] = c;
+                        }
+                        std::shuffle(cand.begin(), cand.end(), rng);
+
+                        if (window > 0 && rng() % 4 != 0) {
+                            // sliding window use: the newest S blocks (the ones overlapping the window)
+                            for (int64_t s = 0; s < S; ++s) {
+                                row[s] = cur - s >= 0 ? (int32_t) (cur - s) : -1;
+                            }
+                            std::shuffle(row, row + S, rng);
+                            continue;
+                        }
+
+                        int64_t n_valid = std::max<int64_t>(1, std::min<int64_t>(S, cur + 1) - (int64_t) (rng() % 3));
+                        if (rng() % 16 == 0) {
+                            n_valid = 0;
+                        }
+                        for (int64_t s = 0; s < n_valid; ++s) {
+                            row[s] = s == 0 ? cur : cand[s - 1];
+                        }
+                        std::shuffle(row, row + S, rng);
+                    }
+                }
+                ggml_backend_tensor_set(t, idx.data(), 0, ggml_nbytes(t));
+            } else {
+                init_tensor_uniform(t);
+            }
+        }
+    }
+};
+
 // GGML_OP_GATED_DELTA_NET + GGML_OP_CPY (recurrent cache fusion)
 struct test_gated_delta_net_cache_fusion : public test_case {
     const ggml_type type;
@@ -17562,6 +17852,87 @@ static std::vector<std::unique_ptr<test_case>> make_test_cases_eval() {
     test_cases.emplace_back(new test_gdn_conv_deferred(256, 32, 4, 4, 2, 4));
     test_cases.emplace_back(new test_gdn_conv_deferred(10240, 128, 32, 8, 1, 8));
     test_cases.emplace_back(new test_gdn_conv_deferred(10240, 128, 32, 20, 1, 8));
+
+    // nsa_select (Hq, Hkv, D, bs, n_sel, NB, T, N0)
+    test_cases.emplace_back(new test_nsa_select(32, 2,  64, 64, 16, 64, 512, 3584)); // 4K context prefill chunk
+    test_cases.emplace_back(new test_nsa_select(32, 2,  64, 64, 16, 64,   1, 4095)); // decode
+    test_cases.emplace_back(new test_nsa_select(32, 2,  64, 64, 16, 64,   7, 2000)); // NB larger than the complete blocks
+    test_cases.emplace_back(new test_nsa_select(32, 2,  64, 64, 16,  2, 100,    0)); // no complete block for pos < 63
+    test_cases.emplace_back(new test_nsa_select(32, 2,  64, 64, 16,  6,  33,  300)); // NB < n_sel
+    test_cases.emplace_back(new test_nsa_select(16, 1,  64, 64, 16, 32,  64, 1984));
+    test_cases.emplace_back(new test_nsa_select( 8, 2, 128, 32,  8, 38,  20, 1200)); // cur >= NB for some queries
+    test_cases.emplace_back(new test_nsa_select(48, 1,  32, 16,  4, 20,   5,  250)); // G > 32
+
+    // nsa_sel_attn (type_kv, D, Dv, Hq, Hkv, bs, S, N, T, v_trans)
+    for (ggml_type type_kv : { GGML_TYPE_F16, GGML_TYPE_F32 }) {
+        for (int64_t T : { 1, 7, 512 }) {
+            test_cases.emplace_back(new test_nsa_sel_attn(type_kv, 64, 64, 32, 2, 64, 16, 4096, T));
+        }
+        test_cases.emplace_back(new test_nsa_sel_attn(type_kv, 64, 64, 32, 2, 64, 16, 4096, 33, true));
+        test_cases.emplace_back(new test_nsa_sel_attn(type_kv, 64, 64, 32, 2, 64, 16, 4000,  7));       // N % bs != 0
+        test_cases.emplace_back(new test_nsa_sel_attn(type_kv, 64, 64, 32, 2, 64, 16, 4000, 100, true));
+    }
+    test_cases.emplace_back(new test_nsa_sel_attn(GGML_TYPE_F16, 64, 64, 16, 1, 64, 16, 2048, 64));
+    test_cases.emplace_back(new test_nsa_sel_attn(GGML_TYPE_F16, 128, 96, 8, 2, 32, 8, 1000, 13));
+    test_cases.emplace_back(new test_nsa_sel_attn(GGML_TYPE_F16, 128, 96, 8, 2, 32, 8, 1000, 13, true));
+    test_cases.emplace_back(new test_nsa_sel_attn(GGML_TYPE_F32, 32, 32, 48, 1, 16, 4, 300, 5));      // G > 32
+    test_cases.emplace_back(new test_nsa_sel_attn(GGML_TYPE_F32, 128, 128, 4, 4, 128, 4, 700, 9));   // bs = 128, MHA
+    // decode sizes (split-K path)
+    for (ggml_type type_kv : { GGML_TYPE_F16, GGML_TYPE_F32 }) {
+        for (int64_t N : { 4096, 32768 }) {
+            for (int64_t T : { 1, 4 }) {
+                test_cases.emplace_back(new test_nsa_sel_attn(type_kv, 64, 64, 32, 2, 64, 16, N, T));
+                test_cases.emplace_back(new test_nsa_sel_attn(type_kv, 64, 64, 32, 2, 64, 16, N, T, true));
+            }
+        }
+        test_cases.emplace_back(new test_nsa_sel_attn(type_kv, 64, 64, 32, 2, 64, 16, 4000, 1));       // N % bs != 0
+        test_cases.emplace_back(new test_nsa_sel_attn(type_kv, 64, 64, 32, 2, 64, 64, 32768, 1));      // S = 64
+    }
+    test_cases.emplace_back(new test_nsa_sel_attn(GGML_TYPE_F16, 128, 96, 8, 2, 32, 8, 1000, 1, true));
+    test_cases.emplace_back(new test_nsa_sel_attn(GGML_TYPE_F32, 32, 32, 48, 1, 16, 4, 300, 1));      // G > 32
+    test_cases.emplace_back(new test_nsa_sel_attn(GGML_TYPE_F32, 128, 128, 4, 4, 128, 4, 700, 2));   // bs = 128, MHA
+    test_cases.emplace_back(new test_nsa_sel_attn(GGML_TYPE_F16, 64, 64, 6, 2, 64, 16, 4096, 1));    // G = 3
+    // GQA ratios that need more heads than warps (warp count is capped by the register file)
+    test_cases.emplace_back(new test_nsa_sel_attn(GGML_TYPE_F16,  64,  64, 18, 1, 64, 16, 4096, 7));  // G = 18, 1 head/warp
+    test_cases.emplace_back(new test_nsa_sel_attn(GGML_TYPE_F16, 128, 128, 64, 1, 64, 16, 4096, 7));  // G = 64, runtime dims
+    test_cases.emplace_back(new test_nsa_sel_attn(GGML_TYPE_F16,  64,  64, 68, 1, 64, 16, 4096, 1));  // G = 68, split-K
+    // sliding window lower bound (window 512 = 8 full blocks + the current one, 100 = not a multiple of bs)
+    for (ggml_type type_kv : { GGML_TYPE_F16, GGML_TYPE_F32 }) {
+        for (int64_t T : { 1, 7, 512 }) {
+            test_cases.emplace_back(new test_nsa_sel_attn(type_kv, 64, 64, 32, 2, 64, 16, 4096, T, false, 512));
+        }
+        test_cases.emplace_back(new test_nsa_sel_attn(type_kv, 64, 64, 32, 2, 64, 16, 4000, 100, true, 512));
+        test_cases.emplace_back(new test_nsa_sel_attn(type_kv, 64, 64, 32, 2, 64, 16, 4096,  33, false, 100));
+        test_cases.emplace_back(new test_nsa_sel_attn(type_kv, 64, 64, 32, 2, 64, 16, 32768,  1, true, 512));
+    }
+    test_cases.emplace_back(new test_nsa_sel_attn(GGML_TYPE_F16, 128, 96, 8, 2, 32, 8, 1000, 13, false, 70));
+    // quantized K/V cache (rows of blocks along the head dim, so no transposed V): prefill, decode (split-K), window,
+    // N % bs != 0, runtime dims, and mixed K/V types
+    for (ggml_type type_kv : { GGML_TYPE_Q8_0, GGML_TYPE_Q4_0 }) {
+        for (int64_t T : { 1, 4, 7, 512 }) {
+            test_cases.emplace_back(new test_nsa_sel_attn(type_kv, 64, 64, 32, 2, 64, 16, 4096, T));
+        }
+        test_cases.emplace_back(new test_nsa_sel_attn(type_kv, 64, 64, 32, 2, 64, 16, 32768,   1));
+        test_cases.emplace_back(new test_nsa_sel_attn(type_kv, 64, 64, 32, 2, 64, 16, 4000,  100));       // N % bs != 0
+        test_cases.emplace_back(new test_nsa_sel_attn(type_kv, 64, 64, 32, 2, 64, 16, 4096,   33, true, 0, GGML_TYPE_F16)); // K view of a larger cache, F16 V^T
+        test_cases.emplace_back(new test_nsa_sel_attn(type_kv, 64, 64, 32, 2, 64, 16, 4096,    7, false, 512));
+        test_cases.emplace_back(new test_nsa_sel_attn(type_kv, 64, 64, 32, 2, 64, 16, 32768,   1, false, 512));
+        test_cases.emplace_back(new test_nsa_sel_attn(type_kv, 64, 64, 32, 2, 64, 16, 4096,   33, false, 100));
+        test_cases.emplace_back(new test_nsa_sel_attn(type_kv, 128, 96, 8, 2, 32,  8, 1000,   13));       // runtime dims, D != Dv
+        test_cases.emplace_back(new test_nsa_sel_attn(type_kv, 64, 64, 18, 1, 64, 16, 4096,    7));       // G = 18, 1 head/warp
+        test_cases.emplace_back(new test_nsa_sel_attn(type_kv, 64, 64, 68, 1, 64, 16, 4096,    1));       // G = 68, split-K
+    }
+    for (auto [tk, tv] : std::vector<std::pair<ggml_type, ggml_type>> {
+            { GGML_TYPE_Q8_0, GGML_TYPE_F16  }, { GGML_TYPE_F16,  GGML_TYPE_Q8_0 }, { GGML_TYPE_Q4_0, GGML_TYPE_F16 },
+            { GGML_TYPE_F16,  GGML_TYPE_Q4_0 }, { GGML_TYPE_Q8_0, GGML_TYPE_Q4_0 }, { GGML_TYPE_Q4_0, GGML_TYPE_Q8_0 } }) {
+        for (int64_t T : { 1, 7 }) {
+            test_cases.emplace_back(new test_nsa_sel_attn(tk, 64, 64, 32, 2, 64, 16, 4096, T, false, 0, tv));
+        }
+        test_cases.emplace_back(new test_nsa_sel_attn(tk, 64, 64, 32, 2, 64, 16, 4096, 7, false, 512, tv));
+    }
+    // F32 + quantized: no CUDA kernel (reported as not supported; a real graph runs them on the CPU)
+    test_cases.emplace_back(new test_nsa_sel_attn(GGML_TYPE_F32,  64, 64, 32, 2, 64, 16, 4096, 7, false, 0, GGML_TYPE_Q8_0));
+    test_cases.emplace_back(new test_nsa_sel_attn(GGML_TYPE_Q4_0, 64, 64, 32, 2, 64, 16, 4096, 7, false, 0, GGML_TYPE_F32));
     test_cases.emplace_back(new test_gated_delta_net_cache_fusion(GGML_TYPE_F32, 4, 32,   2, 1, 2));
     test_cases.emplace_back(new test_gated_delta_net_cache_fusion(GGML_TYPE_F32, 4, 64,   4, 1, 2));
     test_cases.emplace_back(new test_gated_delta_net_cache_fusion(GGML_TYPE_F32, 4, 32,   4, 1, 4));
@@ -17726,6 +18097,30 @@ static std::vector<std::unique_ptr<test_case>> make_test_cases_eval() {
 // Test cases for performance evaluation: should be representative of real-world use cases
 static std::vector<std::unique_ptr<test_case>> make_test_cases_perf() {
     std::vector<std::unique_ptr<test_case>> test_cases;
+    // NSA at the model shapes: 4K context prefill chunks and decode
+    test_cases.emplace_back(new test_nsa_select(32, 2, 64, 64, 16,  64,  512, 3584));
+    test_cases.emplace_back(new test_nsa_select(32, 2, 64, 64, 16,  64, 2048, 2048));
+    test_cases.emplace_back(new test_nsa_select(32, 2, 64, 64, 16,  64,    1, 4095));
+    test_cases.emplace_back(new test_nsa_select(32, 2, 64, 64, 16, 512,    1, 32767));
+    test_cases.emplace_back(new test_nsa_sel_attn(GGML_TYPE_F16, 64, 64, 32, 2, 64, 16, 4096,  512));
+    test_cases.emplace_back(new test_nsa_sel_attn(GGML_TYPE_F16, 64, 64, 32, 2, 64, 16, 4096, 2048));
+    test_cases.emplace_back(new test_nsa_sel_attn(GGML_TYPE_F16, 64, 64, 32, 2, 64, 16, 4096,    1));
+    test_cases.emplace_back(new test_nsa_sel_attn(GGML_TYPE_F16, 64, 64, 32, 2, 64, 16, 4096,    4));
+    test_cases.emplace_back(new test_nsa_sel_attn(GGML_TYPE_F16, 64, 64, 32, 2, 64, 16, 32768,   1));
+    test_cases.emplace_back(new test_nsa_sel_attn(GGML_TYPE_F16, 64, 64, 32, 2, 64, 16, 4096,    1, true));
+    test_cases.emplace_back(new test_nsa_sel_attn(GGML_TYPE_F16, 64, 64, 32, 2, 64, 16, 4096,   16));
+    test_cases.emplace_back(new test_nsa_sel_attn(GGML_TYPE_F16, 64, 64, 32, 2, 64, 16, 4096,   64));
+    test_cases.emplace_back(new test_nsa_sel_attn(GGML_TYPE_F16, 64, 64, 32, 2, 64, 16, 4096,  512, true));
+    test_cases.emplace_back(new test_nsa_sel_attn(GGML_TYPE_F16, 64, 64, 32, 2, 64,  9, 4096,  512, false, 512)); // SWA
+    test_cases.emplace_back(new test_nsa_sel_attn(GGML_TYPE_F16, 64, 64, 32, 2, 64,  9, 4096,    1, false, 512)); // SWA decode
+    // quantized K/V cache (same shapes as above, F16 for comparison)
+    for (ggml_type type_kv : { GGML_TYPE_F16, GGML_TYPE_Q8_0, GGML_TYPE_Q4_0 }) {
+        for (int64_t T : { 1, 512, 2048 }) {
+            test_cases.emplace_back(new test_nsa_sel_attn(type_kv, 64, 64, 32, 2, 64, 16, 4096, T));
+        }
+        test_cases.emplace_back(new test_nsa_sel_attn(type_kv, 64, 64, 32, 2, 64, 16, 32768, 1));
+        test_cases.emplace_back(new test_nsa_sel_attn(type_kv, 64, 64, 32, 2, 64,  9, 4096, 512, false, 512)); // SWA
+    }
     add_single_query_softmax_tests(test_cases, true);
     // bandwidth comparison at Bonsai-2 shapes
     for (ggml_type t : {GGML_TYPE_PTQ1_0, GGML_TYPE_PQ2_0, GGML_TYPE_Q4_0, GGML_TYPE_Q8_0, GGML_TYPE_Q2_K, GGML_TYPE_TQ2_0}) {

@@ -1,0 +1,24 @@
+{
+ "label": "short cpu_prefill vs kernel-ref",
+ "logits": {
+  "T": 6,
+  "max_abs": 0.0026683807373046875,
+  "mean_abs": 0.00016477811732329428,
+  "kl_mean": 1.6523769771588876e-08,
+  "kl_max": 2.8972118228896606e-08,
+  "top1_agree": 1.0,
+  "argmax_pos_max_abs": 5,
+  "band_0_512": {
+   "max_abs": 0.0026683807373046875,
+   "kl_mean": 1.6523769771588876e-08,
+   "top1": 1.0
+  }
+ },
+ "blocks": {
+  "sets": 144,
+  "exact_set_agree": 1.0,
+  "mean_overlap": 1.0,
+  "n_mismatch": 0,
+  "first_mismatches": []
+ }
+}

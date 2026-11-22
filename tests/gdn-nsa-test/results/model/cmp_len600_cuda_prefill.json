@@ -1,0 +1,29 @@
+{
+ "label": "len600 cuda_prefill vs kernel-ref",
+ "logits": {
+  "T": 600,
+  "max_abs": 0.01090240478515625,
+  "mean_abs": 0.0008210984524339437,
+  "kl_mean": 3.714827127881517e-07,
+  "kl_max": 4.538207692232502e-06,
+  "top1_agree": 1.0,
+  "argmax_pos_max_abs": 567,
+  "band_0_512": {
+   "max_abs": 0.010066509246826172,
+   "kl_mean": 3.667771890902775e-07,
+   "top1": 1.0
+  },
+  "band_512_1024": {
+   "max_abs": 0.01090240478515625,
+   "kl_mean": 3.9886030521214687e-07,
+   "top1": 1.0
+  }
+ },
+ "blocks": {
+  "sets": 14400,
+  "exact_set_agree": 1.0,
+  "mean_overlap": 1.0,
+  "n_mismatch": 0,
+  "first_mismatches": []
+ }
+}

@@ -1220,9 +1220,12 @@ static const char * GGML_OP_NAME[GGML_OP_COUNT] = {
 
     "GATED_DELTA_NET_DEFERRED",
     "GDN_CONV_DEFERRED",
+
+    "NSA_SELECT",
+    "NSA_SEL_ATTN",
 };
 
-static_assert(GGML_OP_COUNT == 127, "GGML_OP_COUNT != 127");
+static_assert(GGML_OP_COUNT == 129, "GGML_OP_COUNT != 129");
 
 static const char * GGML_OP_SYMBOL[GGML_OP_COUNT] = {
     "none",
@@ -1364,9 +1367,12 @@ static const char * GGML_OP_SYMBOL[GGML_OP_COUNT] = {
 
     "gated_delta_net_deferred(q,k,v,g,beta,s,rec,idx)",
     "gdn_conv_deferred(x,w,hist,idx)",
+
+    "nsa_select(q,k_cmp,pos)",
+    "nsa_sel_attn(q,k,v,idx,pos)",
 };
 
-static_assert(GGML_OP_COUNT == 127, "GGML_OP_COUNT != 127");
+static_assert(GGML_OP_COUNT == 129, "GGML_OP_COUNT != 129");
 
 static_assert(GGML_OP_POOL_COUNT == 2, "GGML_OP_POOL_COUNT != 2");
 
@@ -7580,6 +7586,97 @@ struct ggml_tensor * ggml_gdn_conv_deferred(
     result->src[1] = w;
     result->src[2] = hist;
     result->src[3] = rec_idx;
+
+    return result;
+}
+
+// ggml_nsa_select
+
+struct ggml_tensor * ggml_nsa_select(
+        struct ggml_context * ctx,
+        struct ggml_tensor  * q,
+        struct ggml_tensor  * k_cmp,
+        struct ggml_tensor  * pos,
+        int                   block_size,
+        int                   n_sel,
+        float                 scale) {
+    GGML_ASSERT(q->type == GGML_TYPE_F32 && k_cmp->type == GGML_TYPE_F32 && pos->type == GGML_TYPE_I32);
+    GGML_ASSERT(q->ne[3] == 1 && k_cmp->ne[3] == 1);
+    GGML_ASSERT(q->ne[0] == k_cmp->ne[0]);
+    GGML_ASSERT(q->ne[1] % k_cmp->ne[1] == 0);
+    GGML_ASSERT(ggml_is_vector(pos) && pos->ne[0] == q->ne[2]);
+    GGML_ASSERT(q->nb[0] == sizeof(float) && k_cmp->nb[0] == sizeof(float));
+    GGML_ASSERT(block_size > 0 && n_sel > 0);
+
+    struct ggml_tensor * result = ggml_new_tensor_3d(ctx, GGML_TYPE_I32, n_sel, k_cmp->ne[1], q->ne[2]);
+
+    ggml_set_op_params_i32(result, 0, block_size);
+    ggml_set_op_params_i32(result, 1, n_sel);
+    ggml_set_op_params_f32(result, 2, scale);
+
+    result->op     = GGML_OP_NSA_SELECT;
+    result->src[0] = q;
+    result->src[1] = k_cmp;
+    result->src[2] = pos;
+
+    return result;
+}
+
+// ggml_nsa_sel_attn
+
+struct ggml_tensor * ggml_nsa_sel_attn(
+        struct ggml_context * ctx,
+        struct ggml_tensor  * q,
+        struct ggml_tensor  * k,
+        struct ggml_tensor  * v,
+        struct ggml_tensor  * idx,
+        struct ggml_tensor  * pos,
+        int                   block_size,
+        float                 scale) {
+    return ggml_nsa_sel_attn_ext(ctx, q, k, v, idx, pos, block_size, scale, 0);
+}
+
+struct ggml_tensor * ggml_nsa_sel_attn_ext(
+        struct ggml_context * ctx,
+        struct ggml_tensor  * q,
+        struct ggml_tensor  * k,
+        struct ggml_tensor  * v,
+        struct ggml_tensor  * idx,
+        struct ggml_tensor  * pos,
+        int                   block_size,
+        float                 scale,
+        int                   window) {
+    GGML_ASSERT(q->type == GGML_TYPE_F32 && idx->type == GGML_TYPE_I32 && pos->type == GGML_TYPE_I32);
+    // K/V: F32, F16, or a quantized type with block-contiguous rows (dim 0 = head dim, no transposed layout)
+    const struct ggml_tensor * kv[2] = { k, v };
+    for (int i = 0; i < 2; ++i) {
+        const struct ggml_tensor * t = kv[i];
+        if (t->type != GGML_TYPE_F32 && t->type != GGML_TYPE_F16) {
+            GGML_ASSERT(ggml_is_quantized(t->type) && ggml_get_type_traits(t->type)->to_float != NULL);
+            GGML_ASSERT(t->nb[0] == ggml_type_size(t->type) && t->ne[0] % ggml_blck_size(t->type) == 0);
+        }
+    }
+    GGML_ASSERT(q->ne[3] == 1 && k->ne[3] == 1 && v->ne[3] == 1 && idx->ne[3] == 1);
+    GGML_ASSERT(q->ne[0] == k->ne[0]);
+    GGML_ASSERT(k->ne[1] == v->ne[1] && k->ne[2] == v->ne[2]);
+    GGML_ASSERT(q->ne[1] % k->ne[1] == 0);
+    GGML_ASSERT(idx->ne[1] == k->ne[1] && idx->ne[2] == q->ne[2]);
+    GGML_ASSERT(ggml_is_vector(pos) && pos->ne[0] == q->ne[2]);
+    GGML_ASSERT(q->nb[0] == sizeof(float) && ggml_is_contiguous(idx));
+    GGML_ASSERT(block_size > 0 && window >= 0);
+
+    struct ggml_tensor * result = ggml_new_tensor_3d(ctx, GGML_TYPE_F32, v->ne[0], q->ne[1], q->ne[2]);
+
+    ggml_set_op_params_i32(result, 0, block_size);
+    ggml_set_op_params_f32(result, 1, scale);
+    ggml_set_op_params_i32(result, 2, window);
+
+    result->op     = GGML_OP_NSA_SEL_ATTN;
+    result->src[0] = q;
+    result->src[1] = k;
+    result->src[2] = v;
+    result->src[3] = idx;
+    result->src[4] = pos;
 
     return result;
 }

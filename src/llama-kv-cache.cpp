@@ -1143,6 +1143,19 @@ llama_kv_cache::slot_info llama_kv_cache::find_slot(const llama_ubatch & ubatch,
 
         const auto & cells = v_cells[seq_to_stream[seq_id]];
 
+        // GDN_NSA: the NSA block math reads blocks of cells as blocks of positions, so each token goes to cell == pos
+        if (model.arch == LLM_ARCH_GDN_NSA) {
+            for (uint32_t i = 0; i < n_tokens; ++i) {
+                const llama_pos p = ubatch.pos[s*n_tokens + i];
+                if (p < 0 || (uint32_t) p >= cells.size() || !cells.is_empty(p)) {
+                    LLAMA_LOG_ERROR("%s: gdn-nsa needs KV cell %d (= token position) to be free\n", __func__, p);
+                    return { };
+                }
+                res.idxs[s].push_back(p);
+            }
+            continue;
+        }
+
         uint32_t head_cur = v_heads[seq_to_stream[seq_id]];
 
         // if we have enough unused cells before the current head ->
@@ -1332,9 +1345,10 @@ void llama_kv_cache::apply_ubatch(const slot_info & sinfo, const llama_ubatch & 
 
 bool llama_kv_cache::get_can_shift() const {
     // Step35 uses per-layer RoPE dims; K-shift assumes a single global n_rot.
+    // GDN_NSA maps KV cells to positions 1:1 for its block math, so cells cannot be shifted.
     const int n_pos_per_embd = hparams.n_pos_per_embd();
 
-    return model.arch != LLM_ARCH_STEP35 &&
+    return model.arch != LLM_ARCH_STEP35 && model.arch != LLM_ARCH_GDN_NSA &&
         (n_pos_per_embd <= 1 ||
          (n_pos_per_embd == 4 && llama_kv_cache_uses_mrope_shift(hparams)));
 }
